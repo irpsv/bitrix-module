@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\components;
+namespace module_id;
 
 class TestComp extends \CBitrixComponent
 {
