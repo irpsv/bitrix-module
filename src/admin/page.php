@@ -2,7 +2,7 @@
 
 require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php";
 
-$moduleId = "olof";
+$moduleId = "moduleId";
 if ($APPLICATION->GetGroupRight($moduleId) == "D") {
     $APPLICATION->AuthForm("Не достаточно прав");
 }
@@ -11,7 +11,9 @@ $APPLICATION->SetTitle("Заголовок страницы");
 $errors = [];
 $success = [];
 
+//
 // process code
+//
 
 require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php";
 ?>
@@ -46,29 +48,18 @@ $tabs->beginNextTab();
 ?>
 
 <form class="" action="" method="post">
-    <table class="adm-detail-content-table edit-table">
-        <tbody>
-            <tr>
-                <td width="50%" class="adm-detail-content-cell-l">
-                    Название
-                </td>
-                <td width="50%" class="adm-detail-content-cell-r">
-                    Поле
-                </td>
-            </tr>
-            <tr>
-                <td width="50%" class="adm-detail-content-cell-l">
-                    
-                </td>
-                <td width="50%" class="adm-detail-content-cell-r">
-                    <input type="submit" name="" value="Сохранить" class="adm-btn-save">
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <tr>
+        <td width="50%" class="adm-detail-content-cell-l">
+            Название
+        </td>
+        <td width="50%" class="adm-detail-content-cell-r">
+            Поле
+        </td>
+    </tr>
 </form>
 
 <?php
+$tabs->buttons([]);
 $tabs->end();
 
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php";
