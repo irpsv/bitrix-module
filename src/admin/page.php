@@ -6,7 +6,7 @@ $moduleId = "moduleId";
 if ($APPLICATION->GetGroupRight($moduleId) == "D") {
     $APPLICATION->AuthForm("Не достаточно прав");
 }
-$APPLICATION->SetTitle("Заголовок страницы");
+$APPLICATION->SetTitle("Удаление значений свойств");
 
 $errors = [];
 $success = [];
@@ -34,7 +34,7 @@ if ($success) {
     ]);
 }
 ?>
-
+<form class="" action="" method="post">
 <?php
 $tabs = new CAdminTabControl("tabs", [
     [
@@ -47,7 +47,6 @@ $tabs->begin();
 $tabs->beginNextTab();
 ?>
 
-<form class="" action="" method="post">
     <tr>
         <td width="50%" class="adm-detail-content-cell-l">
             Название
@@ -56,11 +55,13 @@ $tabs->beginNextTab();
             Поле
         </td>
     </tr>
-</form>
 
 <?php
 $tabs->buttons([]);
 $tabs->end();
+?>
 
+</form>
+<?
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php";
 ?>
