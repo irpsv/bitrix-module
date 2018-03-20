@@ -78,7 +78,7 @@ class module_id extends CModule
 
 	protected function getBitrixComponentsDir()
 	{
-		return $_SERVER['DOCUMENT_ROOT'].'/local/components/';
+		return $_SERVER['DOCUMENT_ROOT'].'/local/components/'.$this->MODULE_ID;
 	}
 
 	protected function getBitrixAdminPageName(string $page)
