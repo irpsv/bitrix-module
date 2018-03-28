@@ -32,7 +32,7 @@ $options = [
                     'val3' => 'label3',
                     'val4' => 'label4',
                 ],
-                'multiple' => false,
+                'multiple' => true,
 			]
 		],
 	],
@@ -48,7 +48,12 @@ $options = [
                 'group' => 'Название группы 2',
             ],
             'name6' => 'Название6',
-            'name7' => 'Название7',
+            [
+				'name' => 'name7',
+                'label' => 'Название7',
+                'type' => 'text',
+                'multiple' => true,
+			],
         ],
     ],
 ];
@@ -57,6 +62,7 @@ $options = [
 // process
 //
 
+$optionJson = [];
 $optionNames = [];
 foreach ($options as $optionTab) {
     foreach ($optionTab['options'] as $name => $value) {
@@ -65,9 +71,14 @@ foreach ($options as $optionTab) {
         }
         else if (is_array($value)) {
             $name = $value['name'] ?? null;
-            if ($name) {
-                $optionNames[] = $name;
-            }
+			if ($name) {
+				$optionNames[] = $name;
+
+				$multiple = (bool) ($value['multiple'] ?? false);
+				if ($multiple) {
+					$optionJson[] = $name;
+				}
+			}
         }
     }
 }
@@ -75,7 +86,13 @@ foreach ($options as $optionTab) {
 if ($_POST['save'] ?? $_POST['apply'] ?? false) {
 	foreach ($optionNames as $name) {
 		$value = $_POST[$name] ?? null;
-		$ret = Option::set($mid, $name, $value);
+		if (is_array($value)) {
+			$value = array_filter($value);
+		}
+		if (in_array($name, $optionJson)) {
+			$value = json_encode($value);
+		}
+		Option::set($mid, $name, "{$value}");
 	}
 }
 
@@ -114,13 +131,23 @@ $actionUrl = $APPLICATION->GetCurPage() ."?mid=".urlencode($mid)."&lang=".LANGUA
                     continue;
                 }
 
+				$optionType = $value['type'] ?? 'text';
+				if ($optionType === 'file') {
+					$file = $value['file'];
+					if ($file) {
+						echo "<tr><td colspan='2'>";
+						@include $file;
+						echo "</td></tr>";
+					}
+					continue;
+				}
+
                 $optionName = $value['name'] ?? null;
                 if (!$optionName) {
                     continue;
                 }
 
                 $optionLabel = $value['label'] ?? $optionName;
-                $optionType = $value['type'] ?? 'text';
             }
 
             $optionValue = (string) Option::get($mid, $optionName);
@@ -133,22 +160,39 @@ $actionUrl = $APPLICATION->GetCurPage() ."?mid=".urlencode($mid)."&lang=".LANGUA
                     <?php
                     switch ($optionType) {
                         case 'select':
-                            $values = $value['values'];
-                            $multiple = ($value['multiple'] ?? false);
-                            $size = $multiple ? 5 : 1;
-                            echo "<select class='typeselect' name='{$optionName}' size='{$size}' ".($multiple ? 'multiple' : '').">";
-                            foreach ($values as $key => $value) {
-                                if (is_integer($key)) {
-                                    $selected = "{$value}" === "{$optionValue}" ? "selected" : "";
-                                    echo "<option {$selected}>{$value}</option>";
-                                }
-                                else {
-                                    $selected = "{$key}" === "{$optionValue}" ? "selected" : "";
-                                    echo "<option value='{$key}' {$selected}>{$value}</option>";
-                                }
-                            }
-                            echo "</select>";
-                            break;
+							$selectValues = $value['values'];
+							$isAssocSelectValues = !empty(array_diff_assoc(
+								array_keys($selectValues),
+								range(0, count($selectValues)-1)
+							));
+
+							$multiple = (bool) ($value['multiple'] ?? false);
+							$size = 1;
+							if ($multiple) {
+								$size = 5;
+								$optionName .= "[]";
+							}
+							
+							echo "<select class='typeselect' name='{$optionName}' size='{$size}' ".($multiple ? 'multiple' : '').">";
+							foreach ($selectValues as $key => $item) {
+								if ($isAssocSelectValues) {
+									$selectOptionValue = $key;
+								}
+								else {
+									$selectOptionValue = $item;
+								}
+
+								if ($multiple) {
+									$selected = in_array($selectOptionValue, $optionValue) ? "selected" : "";
+								}
+								else {
+									$selected = "{$selectOptionValue}" === "{$optionValue}" ? "selected" : "";
+								}
+
+								echo "<option value='{$selectOptionValue}' {$selected}>{$item}</option>";
+							}
+							echo "</select>";
+							break;
 
                         case 'checkbox':
                             $optionValue = $optionValue ?: 'N';
@@ -160,8 +204,26 @@ $actionUrl = $APPLICATION->GetCurPage() ."?mid=".urlencode($mid)."&lang=".LANGUA
                             break;
 
                         default:
-                            echo "<input type='{$optionType}' name='{$optionName}' value='{$optionValue}'>";
-                            break;
+							$multiple = (bool) ($value['multiple'] ?? false);
+							if ($multiple) {
+								$optionName .= "[]";
+								foreach ($optionValue as $item) {
+									if (empty($item)) {
+										continue;
+									}
+									echo "<div><input type='{$optionType}' name='{$optionName}' value='{$item}'></div>";
+								}
+								echo "<div>
+								<input type='button' value='Добавить' onclick='addTemplateRow(this);'>
+								<div class='jsTemplateRow' style='display:none;'>
+									<input type='{$optionType}' name='{$optionName}' value=''>
+								</div>
+								</div>";
+							}
+							else {
+								echo "<input type='{$optionType}' name='{$optionName}' value='{$optionValue}'>";
+							}
+							break;
                     }
                     ?>
                 </td>
@@ -175,3 +237,35 @@ $actionUrl = $APPLICATION->GetCurPage() ."?mid=".urlencode($mid)."&lang=".LANGUA
 
 ?>
 </form>
+<style media="screen">
+	.adm-detail-content-cell-l {
+		width: 50%;
+	}
+	.adm-detail-content-cell-r select {
+		width: auto;
+		max-width: 100%;
+	}
+	.adm-detail-content-cell-l,
+	.adm-detail-content-cell-r {
+		vertical-align: top;
+	}
+</style>
+<script type="text/javascript">
+	function addTemplateRow(btn) {
+		var templateRow = btn.parentNode.querySelector('.jsTemplateRow')
+		if (!templateRow) {
+			return;
+		}
+
+		var targetElement = btn.parentNode.parentNode;
+		if (!targetElement) {
+			return;
+		}
+
+		var div = document.createElement('div')
+		div.innerHTML = templateRow.innerHTML
+		targetElement.insertBefore(
+			div, targetElement.lastElementChild
+		)
+	}
+</script>
