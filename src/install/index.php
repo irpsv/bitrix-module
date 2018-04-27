@@ -13,6 +13,11 @@ class module_id extends CModule
 
     public function DoInstall()
     {
+        $file = __DIR__.'/do-install.php';
+        if (file_exists($file)) {
+            include $file;
+        }
+    
 		$this->addSymlinkAdmin();
 		$this->addSymlinkComponents();
         RegisterModule($this->MODULE_ID);
@@ -20,6 +25,11 @@ class module_id extends CModule
 
     public function DoUninstall()
     {
+        $file = __DIR__.'/do-uninstall.php';
+        if (file_exists($file)) {
+            include $file;
+        }
+        
 		$this->removeSymlinkAdmin();
 		$this->removeSymlinkComponents();
         UnRegisterModule($this->MODULE_ID);
