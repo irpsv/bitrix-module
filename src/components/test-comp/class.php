@@ -14,6 +14,7 @@ class TestComp extends \CBitrixComponent
 		$cachePath = preg_replace('/[^a-z0-9]/i', '_', __CLASS__);
 		if ($this->startResultCache($cacheTime, $cacheAdditionalId, $cachePath)) {
 			$this->run();
+			$this->endResultCache();
 		}
 	}
 
