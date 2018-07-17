@@ -1,6 +1,6 @@
 <?php
 
-if ($APPLICATION->GetGroupRight("module_id")) {
+if ($APPLICATION->GetGroupRight("module_id") != "D") {
 	return false;
 }
 
