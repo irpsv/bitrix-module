@@ -1,6 +1,6 @@
 <?php
 
-namespace olof_managers\iblock;
+namespace module_id\iblock;
 
 \CModule::includeModule('iblock');
 
@@ -47,6 +47,14 @@ abstract class ElementActiveRecord
 			'IBLOCK_ID' => static::getIblockId(),
 			'CHECK_PERMISSIONS' => 'N',
 		];
+	}
+
+	public static function getMergedDefaultFilter(array $filter)
+	{
+		return array_merge(
+			static::getDefaultFilter(),
+			$filter
+		);
 	}
 
 	public static function getList($order = null, $filter = null, $group = false, $nav = false, $select = [])
