@@ -1,0 +1,36 @@
+.filterView {
+	margin-bottom: 15px;
+	padding: 10px;
+    border: 1px solid #ececec;
+    background: white;
+}
+.filterView__form {
+
+}
+.filterView__fields {
+	display: flex;
+	align-items: center;
+	padding: 0;
+}
+.filterView__field {
+	line-height: 1;
+	margin-right: 10px;
+}
+.filterView__field input,
+.filterView__field select,
+.filterView__field label {
+	display: block;
+	width: 100%;
+}
+.filterView__field.NAME {
+    width: calc(100% - 320px);
+}
+.filterView__field.PROPERTY_status {
+	width: 100px;
+}
+.filterView__field.DATE_CREATE {
+	width: 200px;
+}
+.filterView__btns {
+	padding-top: 15px;
+}
