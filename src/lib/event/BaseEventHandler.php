@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\events;
+namespace module_id\event;
 
 class BaseEventHandler
 {

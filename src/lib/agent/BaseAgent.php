@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\agents;
+namespace module_id\agent;
 
 class BaseAgent
 {
