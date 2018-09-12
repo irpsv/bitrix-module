@@ -1,0 +1,14 @@
+.sorterView {
+	margin: 15px auto;
+}
+.sorterView__item {
+	display: inline-block;
+	padding: 0 10px;
+	border-right: 1px solid silver;
+}
+.sorterView__item .fas {
+	margin-left: 5px;
+}
+.sorterView__item:last-child {
+	border: none;
+}

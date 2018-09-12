@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\components\classes;
+namespace bitrix_module\components\classes;
 
 class FormView extends \CBitrixComponent
 {

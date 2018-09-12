@@ -1,8 +1,8 @@
 <?php
 
-namespace module_id\model;
+namespace bitrix_module\model;
 
-use module_id\iblock\ElementActiveRecord;
+use bitrix_module\iblock\ElementActiveRecord;
 
 class ExampleModel extends ElementActiveRecord
 {

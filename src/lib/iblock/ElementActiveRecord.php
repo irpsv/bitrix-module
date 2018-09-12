@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\iblock;
+namespace bitrix_module\iblock;
 
 \CModule::includeModule('iblock');
 

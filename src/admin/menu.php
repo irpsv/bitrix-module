@@ -1,6 +1,6 @@
 <?php
 
-if ($APPLICATION->GetGroupRight("module_id") != "D") {
+if ($APPLICATION->GetGroupRight("bitrix_module") == "D") {
 	return false;
 }
 
@@ -17,7 +17,7 @@ return [
 	'title' => 'value',
 	'icon' => 'value',
 	'page_icon' => 'value',
-	'module_id' => 'value',
+	'module_id' => 'bitrix_module',
 	'dynamic' => 'value',
 	'items_id' => 'value',
 	'items' => [
@@ -25,7 +25,7 @@ return [
 			'url' => 'value',
 			'text' => 'value',
 			'items' => [
-				
+
 			],
 		],
 	],

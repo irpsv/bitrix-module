@@ -1,55 +1,50 @@
 <?php
 
-CJSCore::Init([
-	"jquery","date"
-]);
-
+$fields = $arResult['FIELDS'];
 $requestName = $arResult['REQUEST_NAME'];
-$attributeNames = $arResult['NAMES'];
-$attributeValues = $arResult['VALUES'];
-$attributeActive = $arResult['ACTIVE'];
-$valuesLabels = $arResult['VALUES_LABELS'];
 
 ?>
 <div class="filterView">
-	<form class="filterView__form" action="" method="get">
-		<div class="filterView__fields">
-			<?php
-			foreach ($attributeNames as $name) {
-				$label = GetMessage($name) ?: $name;
-				$values = $attributeValues[$name] ?? null;
-				$active = (array) ($attributeActive[$name] ?? []);
-				$htmlName = "{$requestName}[{$name}]";
+	<form method="get">
+		<?php
+		foreach ($fields as $field) {
+			echo "<div class='filterView__item'>";
+			$name = $field->name;
+			$type = $field->getType();
+			$fieldRequestName = $name ? ($requestName ? "{$requestName}[{$name}]" : $name) : "";
 
-				echo "<div class='filterView__field {$name}'>";
-				echo "<label>{$label}</label>";
-				if ($name === "DATE_CREATE") {
-					$active = $active[0] ?? "";
-					echo "<input type='text' name='{$htmlName}' value='{$active}' class='form-control' onclick='BX.calendar({node: this, field: this, bTime: false});'>";
-				}
-				else if ($values) {
-					echo "<select name='{$htmlName}' class='form-control'>";
-					echo "<option></option>";
-					foreach ($values as $value) {
-						$label = $valuesLabels[$value] ?? $value;
-						$selected = in_array($value, $active) ? "selected" : "";
-						echo "<option {$selected} value='{$value}'>{$label}</option>";
-					}
-					echo "</select>";
-				}
-				else {
-					$active = $active[0] ?? "";
-					echo "<input type='text' name='{$htmlName}' value='{$active}' class='form-control'>";
-				}
-				echo "</div>";
+			if (empty($type) || $type === 'text') {
+				include __DIR__.'/filter_item_text.php';
 			}
-			?>
-		</div>
+			else if ($type === 'select') {
+				include __DIR__.'/filter_item_select.php';
+			}
+			else if ($type === 'checkbox') {
+				include __DIR__.'/filter_item_checkbox.php';
+			}
+			else if ($type === 'checkboxlist') {
+				include __DIR__.'/filter_item_checkboxlist.php';
+			}
+			else if ($type === 'radiolist') {
+				include __DIR__.'/filter_item_radiolist.php';
+			}
+			else if ($type === 'date') {
+				include __DIR__.'/filter_item_date.php';
+			}
+			else if ($type === 'datetime') {
+				include __DIR__.'/filter_item_datetime.php';
+			}
+			else {
+				include __DIR__.'/filter_item_component.php';
+			}
+			echo "</div>";
+		}
+		?>
 		<div class="filterView__btns">
-			<button type="submit" class="btn btn-primary">
+			<button type="submit" class="filterViewBtn__apply">
 				Применить
 			</button>
-			<button type="reset" class="btn btn-danger">
+			<button type="reset" class="filterViewBtn__reset">
 				Сбросить
 			</button>
 		</div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\install;
+namespace bitrix_module\install;
 
 include_once __DIR__.'/ModuleIblockBuilder.php';
 

@@ -1,0 +1,26 @@
+.iblockElementList {
+	display: flex;
+	margin: 15px 0;
+}
+.iblockElementList__aside {
+	width: 300px;
+	margin-right: 15px;
+}
+.iblockElementList__content {
+    width: 100%;
+}
+.iblockElementList__filter {
+
+}
+.iblockElementList__sorter {
+
+}
+.iblockElementList__items {
+
+}
+.iblockElementList__item {
+
+}
+.iblockElementList__pager {
+
+}

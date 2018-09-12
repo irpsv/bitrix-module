@@ -1,6 +1,6 @@
 <?php
 
-namespace module_id\agent;
+namespace bitrix_module\agent;
 
 class BaseAgent
 {

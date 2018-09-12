@@ -1,10 +1,10 @@
 <?php
 
-class module_id extends CModule
+class bitrix_module extends CModule
 {
-    public $MODULE_NAME = "Название модуля";
+    public $MODULE_NAME = "Шаблон модуля";
 	public $MODULE_VERSION = '1.0';
-  	public $MODULE_VERSION_DATE = '2018-01-24';
+  	public $MODULE_VERSION_DATE = '2018-09-12';
 
     public function __construct()
     {
@@ -17,7 +17,7 @@ class module_id extends CModule
         if (file_exists($file)) {
             include $file;
         }
-    
+
 		$this->addSymlinkAdmin();
 		$this->addSymlinkComponents();
         RegisterModule($this->MODULE_ID);
@@ -29,7 +29,7 @@ class module_id extends CModule
         if (file_exists($file)) {
             include $file;
         }
-        
+
 		$this->removeSymlinkAdmin();
 		$this->removeSymlinkComponents();
         UnRegisterModule($this->MODULE_ID);

@@ -1,13 +1,18 @@
 <?php
 
-namespace module_id\event;
+namespace bitrix_module\event;
 
 class BaseEventHandler
 {
-	public static function runStatic()
+	public static function runStatic(...$args)
 	{
-		$self = new self();
+		$self = new self(...$args);
 		return $self->run();
+	}
+
+	public function __construct()
+	{
+
 	}
 
 	public function run()

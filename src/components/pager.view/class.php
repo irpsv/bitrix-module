@@ -1,9 +1,13 @@
 <?php
 
-namespace module_id\components\classes;
+namespace bitrix_module\components\classes;
+
+use bitrix_module\data\PagerRequest;
+use bitrix_module\data\PagerRequestBuildByComponentParams;
 
 /**
  * Параметры:
+ * PAGER_REQUEST - объект PagerRequest (если он указан, то остальные можно не указывать)
  * PAGE_NOW - текущая страница
  * PAGE_SIZE - размер страницы
  * TOTAL_COUNT - количество всех записей
@@ -13,24 +17,18 @@ class PagerView extends \CBitrixComponent
 {
 	public function executeComponent()
 	{
-		$this->run();
-	}
+		\CModule::includeModule('bitrix_module');
 
-	public function run()
-	{
-		$pageNow = (int) ($this->arParams['PAGE_NOW'] ?? 1);
-		$pageSize = (int) ($this->arParams['PAGE_SIZE'] ?? 0);
-		$totalCount = (int) ($this->arParams['TOTAL_COUNT'] ?? 0);
-		$requestName = (string) ($this->arParams['REQUEST_NAME'] ?? 'p');
+		$pagerRequest = PagerRequestBuildByComponentParams::runStatic($this->arParams);
+		$pagerRequest->load($_GET);
+		$pager = $pagerRequest->pager;
 
-		if (!$pageSize) {
-			throw new \Exception("Параметр 'PAGE_SIZE' обязателен");
-		}
-
-		$this->arResult['PAGE_NOW'] = $pageNow;
-		$this->arResult['PAGE_SIZE'] = $pageSize;
-		$this->arResult['PAGE_MAX'] = ceil($totalCount / $pageSize);
-		$this->arResult['REQUEST_NAME'] = $requestName;
+		$this->arResult['PAGE_NOW'] = $pager->getPageNow();
+		$this->arResult['PAGE_SIZE'] = $pager->getPageSize();
+		$this->arResult['PAGE_MAX'] = $pager->getPageMax();
+		$this->arResult['REQUEST_NAME'] = $pagerRequest->queryName;
 		$this->includeComponentTemplate();
+
+		return $pagerRequest;
 	}
 }

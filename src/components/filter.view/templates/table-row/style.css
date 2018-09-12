@@ -1,0 +1,58 @@
+.filterViewTableRow {
+	background: white;
+	border: 1px solid #eee;
+	padding: 15px;
+}
+.filterViewTableRow__item {
+	margin-bottom: 15px;
+}
+.filterViewTableRowItem__label {
+	display: block;
+}
+.filterViewTableRowItem__checkboxList {
+
+}
+.filterViewTableRowItem__checkboxListItem {
+	margin: 5px;
+	margin-left: 0;
+}
+.filterViewTableRowItem__checkboxListItem input {
+
+}
+.filterViewTableRowItem__checkboxListItem span {
+	padding-left: 5px;
+}
+.filterViewTableRowItem__checkbox {
+
+}
+.filterViewTableRowItem__select {
+
+}
+.filterViewTableRowItem__select option {
+	padding: 5px;
+}
+.filterViewTableRowItem__radioList {
+
+}
+.filterViewTableRowItem__radioListItem {
+	margin: 5px;
+	margin-left: 0;
+}
+.filterViewTableRowItem__radioListItem input {
+
+}
+.filterViewTableRowItem__radioListItem span {
+	padding-left: 5px;
+}
+.filterViewTableRowItem__text {
+
+}
+.filterViewTableRowItem__datetime {
+
+}
+.filterViewTableRowItem__date {
+
+}
+.filterViewTableRowItem__component {
+
+}
