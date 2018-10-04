@@ -40,6 +40,11 @@ class IblockElementView extends \CBitrixComponent
 			throw new \Exception("Должен быть заполнен один из параметров: 'ID', 'ROW', 'FILTER'");
 		}
 
+		if (!$row && $this->arParams['PROCESS_404']) {
+			include $_SERVER['DOCUMENT_ROOT'].'/404.php';
+			die();
+		}
+
 		$this->arResult['ROW'] = $row;
 		$this->includeComponentTemplate();
 	}

@@ -89,7 +89,7 @@ abstract class ElementActiveRecord
 		return static::create($element);
 	}
 
-	public static function getModels($order, $filter, $group, $nav, $select)
+	public static function getModels($order = null, $filter = null, $group = false, $nav = false, $select = [])
 	{
 		$ret = [];
 		$result = static::getList($order, $filter, $group, $nav, $select);
@@ -117,14 +117,34 @@ abstract class ElementActiveRecord
 		return $model;
 	}
 
+	public function beforeSave()
+	{
+
+	}
+
 	public function save()
 	{
 		return static::saveModel($this);
 	}
 
+	public function afterDelete()
+	{
+
+	}
+
+	public function beforeDelete()
+	{
+
+	}
+
 	public function delete()
 	{
 		return static::deleteModel($this);
+	}
+
+	public function afterDelete()
+	{
+
 	}
 
 	public static function saveModel($model)
@@ -133,6 +153,8 @@ abstract class ElementActiveRecord
 		if (($model instanceof $class) === false) {
 			throw new \Exception("Сохраняемый объект, должен реализовывать вызываемый класс");
 		}
+
+		$model->beforeSave();
 
 		$ibe = new \CIBlockElement;
 		$fields = [
@@ -161,6 +183,9 @@ abstract class ElementActiveRecord
 		if ($ibe->LAST_ERROR) {
 			throw new \Exception($ibe->LAST_ERROR);
 		}
+		else {
+			$model->afterSave();
+		}
 		return $model->id;
 	}
 
@@ -172,7 +197,10 @@ abstract class ElementActiveRecord
 		}
 
 		if ($model->id) {
-			return \CIBlockElement::delete($model->id);
+			$model->beforeDelete();
+			$ret = \CIBlockElement::delete($model->id);
+			$model->afterDelete();
+			return $ret;
 		}
 		else {
 			return false;
