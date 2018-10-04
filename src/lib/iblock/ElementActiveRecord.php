@@ -1,6 +1,6 @@
 <?php
 
-namespace bitrix_module\iblock;
+namespace olof_order_exchange\iblock;
 
 \CModule::includeModule('iblock');
 
@@ -127,7 +127,7 @@ abstract class ElementActiveRecord
 		return static::saveModel($this);
 	}
 
-	public function afterDelete()
+	public function afterSave()
 	{
 
 	}
