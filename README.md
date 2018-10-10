@@ -17,3 +17,4 @@
 - добавить bootstrap компоненты (для 3 и 4 версий - сделать их отдельными шаблонами)
 - добавить jquery-ui компоненты
 - добавить функционал установки публичных страниц (раздел "install/pages")
+- перенести /install/ModuleIblockBuilder в /lib/iblock/ModuleIblockBuilder
