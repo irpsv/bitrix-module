@@ -69,7 +69,7 @@ abstract class BaseEvent
 		\CEventLog::Add([
 			'SEVERITY' => 'ERROR',
 			'AUDIT_TYPE_ID' => __CLASS__,
-			'MODULE_ID' => 'olof_bonuses',
+			'MODULE_ID' => 'bitrix_module',
 			'DESCRIPTION' => $message,
 		]);
 	}
