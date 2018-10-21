@@ -19,3 +19,4 @@
 - добавить jquery-ui компоненты
 - добавить функционал установки публичных страниц (раздел "install/pages")
 - перенести /install/ModuleIblockBuilder в /lib/iblock/ModuleIblockBuilder
+- добавить `DataProvider` который будет хранит параметры filter, pager, sorter, а также основной метод `getResult`, в котором будут применятся все необходимые действия (создать сразу IblockElementProvider, IblockSectionProvider)
