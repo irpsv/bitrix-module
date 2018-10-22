@@ -73,7 +73,7 @@ class Filter
 	{
 		$ret = [];
 		foreach ($this->fields as $name => $field) {
-			$value = $field->value;
+			$value = $field->getValue();
 			if ($value) {
 				$ret[$name] = $value;
 			}

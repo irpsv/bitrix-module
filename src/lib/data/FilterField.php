@@ -4,11 +4,11 @@ namespace bitrix_module\data;
 
 class FilterField
 {
+	protected $value;
+
 	public $name;
 	public $type;
-	public $value;
 	public $label;
-
 	public $multiple;
 	public $values;
 
@@ -41,6 +41,11 @@ class FilterField
 		else {
 			$this->value = $settedValue;
 		}
+	}
+
+	public function getValue()
+	{
+		return $this->value;
 	}
 
 	public function isAssocArrayValues()
@@ -109,7 +114,7 @@ class FilterField
 		$ret['NAME'] = $this->name;
 		$ret['TYPE'] = $this->getType();
 		$ret['LABEL'] = $this->getLabel();
-		$ret['VALUE'] = $this->value;
+		$ret['VALUE'] = $this->getValue();
 		$ret['VALUES'] = $this->values;
 		$ret['MULTIPLE'] = $this->multiple;
 		return array_filter($ret);

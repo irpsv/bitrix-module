@@ -2,8 +2,22 @@
 
 namespace bitrix_module\components\classes;
 
-class IblockElementView extends \CBitrixComponent
+class ModelSectionView extends \CBitrixComponent
 {
+	public function getIblockParams()
+	{
+		return [
+			'SELECT' => [
+				'ID',
+			],
+			'FILTER' => [
+				'ACTIVE' => 'Y',
+				'IBLOCK_CODE' => 'value',
+				'CHECK_PERMISSIONS' => 'N',
+			],
+		];
+	}
+
 	public function executeComponent()
 	{
 		$cacheTime = $this->arParams['CACHE_TIME'] ?? 3600;
@@ -51,6 +65,12 @@ class IblockElementView extends \CBitrixComponent
 
 	public function getRowByFilter(array $filter)
 	{
-		return \CIBlockElement::getList([], $filter)->fetch();
+		$iblockParams = $this->getIblockParams();
+		$select = $iblockParams['SELECT'] ?? ['ID'];
+		$filter = array_merge(
+			$iblockParams['FILTER'] ?? [],
+			$filter
+		);
+		return \CIBlockSection::getList([], $filter, false, $select)->fetch();
 	}
 }

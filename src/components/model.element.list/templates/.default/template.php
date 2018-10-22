@@ -1,6 +1,6 @@
 <?php
 
-$result = $arResult['RESULT'];
+$dataSet = $arResult['DATA_SET'];
 $pagerRequest = $arResult['PAGER_REQUEST'];
 $sorterRequest = $arResult['SORTER_REQUEST'];
 $filterRequest = $arResult['FILTER_REQUEST'];
@@ -36,25 +36,17 @@ $filterRequest = $arResult['FILTER_REQUEST'];
 
 		<div class="iblockElementList__items">
 			<?php
-			$isOnlyId = $arResult['IS_ONLY_ID'];
+			$items = $dataSet->getItems();
 			$itemTemplate = $arParams['ITEM_TEMPLATE'] ?? '';
-			if ($result->selectedRowsCount() < 1) {
+			if (empty($items)) {
 				include __DIR__.'/empty.php';
 			}
-			while ($row = $result->fetch()) {
-				if ($isOnlyId) {
-					$itemParams = [
-						'ID' => $row['ID'],
-					];
-				}
-				else {
-					$itemParams = [
-						'ROW' => $row,
-					];
-				}
-
+			foreach ($items as $item) {
+				$itemParams = [
+					'ROW' => $item,
+				];
 				echo "<div class='iblockElementList__item'>";
-				$APPLICATION->IncludeComponent('bitrix_module:iblock.element.view', $itemTemplate, $itemParams, $component);
+				$APPLICATION->IncludeComponent('bitrix_module:model.element.view', $itemTemplate, $itemParams, $component);
 				echo "</div>";
 			}
 			?>

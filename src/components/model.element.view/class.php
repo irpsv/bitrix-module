@@ -2,8 +2,22 @@
 
 namespace bitrix_module\components\classes;
 
-class IblockSectionView extends \CBitrixComponent
+class ModelElementView extends \CBitrixComponent
 {
+	public function getIblockParams()
+	{
+		return [
+			'SELECT' => [
+				'ID',
+			],
+			'FILTER' => [
+				'ACTIVE' => 'Y',
+				'IBLOCK_CODE' => 'value',
+				'CHECK_PERMISSIONS' => 'N',
+			],
+		];
+	}
+
 	public function executeComponent()
 	{
 		$cacheTime = $this->arParams['CACHE_TIME'] ?? 3600;
@@ -40,12 +54,23 @@ class IblockSectionView extends \CBitrixComponent
 			throw new \Exception("Должен быть заполнен один из параметров: 'ID', 'ROW', 'FILTER'");
 		}
 
+		if (!$row && $this->arParams['PROCESS_404']) {
+			include $_SERVER['DOCUMENT_ROOT'].'/404.php';
+			die();
+		}
+
 		$this->arResult['ROW'] = $row;
 		$this->includeComponentTemplate();
 	}
 
 	public function getRowByFilter(array $filter)
 	{
-		return \CIBlockSection::getList([], $filter)->fetch();
+		$iblockParams = $this->getIblockParams();
+		$select = $iblockParams['SELECT'] ?? ['ID'];
+		$filter = array_merge(
+			$iblockParams['FILTER'] ?? [],
+			$filter
+		);
+		return \CIBlockElement::getList([], $filter, false, false, $select)->fetch();
 	}
 }
