@@ -23,13 +23,13 @@ abstract class BaseEvent
 		if (!$siteId) {
 			$site = \Bitrix\Main\SiteTable::getRow([
 				'select' => [
-					'ID'
+					'LID'
 				],
 				'filter' => [
 					'=DEF' => 'Y',
 				],
 			]);
-			return $site['ID'];
+			return $site['LID'];
 		}
 		return $siteId;
 	}
@@ -47,7 +47,7 @@ abstract class BaseEvent
 			$this->getDefaultParams() ?: [],
 			$this->params ?: []
 		);
-		$result = \Bitrix\Main\Main\Event::send([
+		$result = \Bitrix\Main\Mail\Event::send([
 			'EVENT_NAME' => $this->getEventName(),
 			'LID' => $this->getSiteId(),
 			'C_FIELDS' => $params,
