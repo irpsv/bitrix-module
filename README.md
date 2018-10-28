@@ -20,3 +20,30 @@
 - добавить функционал установки публичных страниц (раздел "install/pages")
 - перенести /install/ModuleIblockBuilder в /lib/iblock/ModuleIblockBuilder
 - добавить `DataProvider` который будет хранит параметры filter, pager, sorter, а также основной метод `getResult`, в котором будут применятся все необходимые действия (создать сразу IblockElementProvider, IblockSectionProvider)
+
+## Структура
+
+- admin
+	- menu.php
+	- page.php
+	- service.php
+	- create-installer.php (скрипт для создания файлов инсталяции и деинсталяции модуля)
+- components
+	- ...
+- docs
+	- components/...
+	- readme.md
+	- any-page.md
+- tests
+	- автотесты (функциональные + автоматическое сканирование страниц сайта на использование модулей просто для вывода инфы)
+- install
+	- pages (список страниц которые скопируются (не символьные ссылки) при установке модуля, допустимо также использовать папки /local /upload /bitrix)
+		- ...
+	- install.php
+	- do-install.php
+	- do-uninstall.php
+- lib
+	- ...
+- index.php
+- options.php
+- autoload.php
