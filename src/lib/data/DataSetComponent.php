@@ -14,7 +14,6 @@ trait DataSetComponent
 	public function run()
 	{
 		\CModule::includeModule('iblock');
-		\CModule::includeModule('bitrix_module');
 
 		$dataSet = $this->getDataSet();
 		$filterRequest = $this->getFilterRequest();
