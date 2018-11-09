@@ -16,6 +16,11 @@ class PagerRequest
 
 	public function load(array $request)
 	{
+		// если queryName пустое, то загрузка не производится
+		if (!$this->queryName) {
+			return null;
+		}
+		
 		$pageNow = (int) ($request[$this->queryName] ?? 0);
 		if ($pageNow) {
 			$this->queryValue = $pageNow;

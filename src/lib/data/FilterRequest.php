@@ -15,6 +15,11 @@ class FilterRequest
 
 	public function load(array $request)
 	{
+		// если queryName пустое, то загрузка не производится
+		if (!$this->queryName) {
+			return null;
+		}
+		
 		$isLoad = false;
 		$requestValues = $request[$this->queryName] ?? [];
 		if ($requestValues) {

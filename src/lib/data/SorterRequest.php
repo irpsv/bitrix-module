@@ -16,6 +16,11 @@ class SorterRequest
 
 	public function load(array $request)
 	{
+		// если queryName пустое, то загрузка не производится
+		if (!$this->queryName) {
+			return null;
+		}
+
 		$params = (array) ($request[$this->queryName] ?? []);
 		foreach ($params as $field => $sort) {
 			$this->sorter->setActive($field, $sort);
