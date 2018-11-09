@@ -2,8 +2,14 @@
 
 namespace bitrix_module\components\classes;
 
+use bitrix_module\data\ItemViewComponent;
+
+\CModule::includeModule('bitrix_module');
+
 class ModelSectionView extends \CBitrixComponent
 {
+	use ItemViewComponent;
+	
 	public function getIblockParams()
 	{
 		return [
@@ -27,40 +33,6 @@ class ModelSectionView extends \CBitrixComponent
 			$this->run();
 			$this->endResultCache();
 		}
-	}
-
-	public function run()
-	{
-		\CModule::includeModule('iblock');
-
-		$id = $this->arParams['ID'] ?? null;
-		$row = $this->arParams['ROW'] ?? null;
-		$filter = $this->arParams['FILTER'] ?? null;
-
-		if ($row) {
-			if (!is_array($row)) {
-				throw new \Exception("Параметр 'ROW' должен быть массивом");
-			}
-		}
-		else if ($id) {
-			$row = $this->getRowByFilter([
-				'ID' => $id,
-			]);
-		}
-		else if ($filter) {
-			$row = $this->getRowByFilter($filter);
-		}
-		else {
-			throw new \Exception("Должен быть заполнен один из параметров: 'ID', 'ROW', 'FILTER'");
-		}
-
-		if (!$row && $this->arParams['PROCESS_404']) {
-			include $_SERVER['DOCUMENT_ROOT'].'/404.php';
-			die();
-		}
-
-		$this->arResult['ROW'] = $row;
-		$this->includeComponentTemplate();
 	}
 
 	public function getRowByFilter(array $filter)

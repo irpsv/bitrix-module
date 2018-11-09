@@ -5,9 +5,8 @@ namespace bitrix_module\components\classes;
 use bitrix_module\data\DataSetComponent;
 use bitrix_module\data\IblockElementDataSet;
 
-/**
- * Отображение КОНКРЕТНОЙ СУЩНОСТИ
- */
+\CModule::includeModule('bitrix_module');
+
 class ModelElementList extends \CBitrixComponent
 {
 	use DataSetComponent;

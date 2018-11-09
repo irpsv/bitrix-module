@@ -1,6 +1,6 @@
 <?php
 
-namespace olof_order_exchange\iblock;
+namespace bitrix_module\iblock;
 
 \CModule::includeModule('iblock');
 
