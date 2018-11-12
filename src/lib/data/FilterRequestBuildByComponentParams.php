@@ -1,6 +1,6 @@
 <?php
 
-namespace bitrix_module\data;
+namespace arteast_simplecatalog\data;
 
 class FilterRequestBuildByComponentParams
 {
@@ -31,6 +31,8 @@ class FilterRequestBuildByComponentParams
 		}
 
 		$iblock = $this->arParams['IBLOCK'];
+		$active = (array) ($this->arParams['ACTIVE'] ?? []);
+
 		if ($iblock) {
 			$filterRequest = FilterRequestBuildByIblockParams::runStatic(
 				$iblock['ID'],
@@ -40,7 +42,12 @@ class FilterRequestBuildByComponentParams
 		else {
 			$fields = $this->arParams['FIELDS'];
 			if (!$fields) {
-				throw new \Exception("Параметр 'FIELDS' обязателен");
+				if ($active) {
+					$fields = array_keys($active);
+				}
+				else {
+					throw new \Exception("Параметр 'FIELDS' обязателен");
+				}
 			}
 
 			$filter = new Filter();
@@ -51,7 +58,6 @@ class FilterRequestBuildByComponentParams
 			$filterRequest = new FilterRequest($filter);
 		}
 
-		$active = (array) ($this->arParams['ACTIVE'] ?? []);
 		foreach ($active as $name => $value) {
 			$filterRequest->filter->setValue($name, $value);
 		}

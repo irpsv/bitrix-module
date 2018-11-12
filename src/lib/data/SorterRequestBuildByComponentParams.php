@@ -30,8 +30,13 @@ class SorterRequestBuildByComponentParams
 			// pass
 		}
 
-		$sorter = new Sorter($this->arParams['FIELDS']);
+		$fields = (array) ($this->arParams['FIELDS'] ?? []);
 		$active = (array) ($this->arParams['ACTIVE'] ?? []);
+		if (!$fields && $active) {
+			$fields = array_keys($active);
+		}
+		
+		$sorter = new Sorter($fields);
 		foreach ($active as $name => $sort) {
 			$sorter->setActive($name, $sort);
 		}
