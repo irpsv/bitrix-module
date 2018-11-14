@@ -6,72 +6,36 @@ class FormView extends \CBitrixComponent
 {
 	public function executeComponent()
 	{
-		$fields = $this->arParams['FIELDS'];
+		$fields = $this->arParams['FIELDS'] ?? null;
 		if (empty($fields)) {
 			throw new \Exception("Параметр 'FIELDS' обязателен");
 		}
 
+		$method = $this->arParams['METHOD'] ?? 'post';
 		$formName = $this->arParams['FORM_NAME'] ?? null;
-		$method = strtolower($this->arParams['METHOD'] ?? 'get');
-		$model = $this->getModel($method, $formName);
-		if (!is_array($model)) {
-			throw new \Exception("Параметр 'MODEL' может быть массивом или функцией возвращающей массив данных");
+		$actionUrl = $this->arParams['ACTION_URL'] ?? '';
+
+		$data = strtolower($method) === 'get' ? $_GET : $_POST;
+		if ($formName) {
+			$data = $data[$formName] ?? [];
 		}
 
 		$this->arResult = [
-			'MODEL' => $model,
-			'FIELDS' => $this->prepareFields($fields, $model, $formName),
 			'METHOD' => $method,
+			'FIELDS' => $this->prepareFields($fields, $data),
 			'FORM_NAME' => $formName,
+			'ACTION_URL' => $actionUrl,
 		];
 		$this->includeComponentTemplate();
 	}
 
-	public function getModel($method, $formName)
+	public function prepareFields(array $fields, $data)
 	{
-		$model = $this->arParams['MODEL'] ?? null;
-		if ($model)	 {
-			if (is_callable($model)) {
-				$model = $model();
-			}
+		foreach ($fields as & $field) {
+			$field['TYPE'] = $field['TYPE'] ?? 'text';
+			$field['VALUE'] = $field['VALUE'] ?? $data[$field] ?? null;
+			$field['LABEL'] = $field['LABEL'] ?? $field['NAME'];
 		}
-		else {
-			$data = $method === 'get' ? $_GET : $_POST;
-			$model = $formName ? ($data[$formName] ?? null) : $data;
-		}
-		if (empty($model)) {
-			return [];
-		}
-		return $model;
-	}
-
-	public function prepareFields(array $fields, array $model, $formName)
-	{
-		$ret = [];
-		foreach ($fields as $key => $value) {
-			if (is_scalar($value)) {
-				$field = [
-					'name' => $key,
-					'label' => $value,
-					'type' => 'text',
-				];
-			}
-			else if (is_array($value)) {
-				$field = $value;
-			}
-			else {
-				continue;
-			}
-
-			$name = $field['name'];
-			$field['value'] = $model[$name] ?? $field['value'] ?? null;
-			$field['validators'] = $field['validators'] ?? [];
-			$field['htmlName'] = $name;
-			if ($formName) {
-				$field['htmlName'] = "{$formName}[{$name}]";
-			}
-			$ret[] = $field;
-		}
-		return $ret;
+		return $fields;
 	}
 }

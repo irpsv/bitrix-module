@@ -8,7 +8,7 @@ abstract class BaseEvent
 
 	public static function send(array $params = [])
 	{
-		$self = new self($params);
+		$self = new static($params);
 		$self->run();
 	}
 
