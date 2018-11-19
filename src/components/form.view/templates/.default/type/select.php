@@ -12,7 +12,7 @@ $isAssoc = ! empty(
 );
 
 echo "<label>{$label}</label>";
-echo "<select name='{$name}' class='form-control' {$required} {$multiple} size='{$size}'>";
+echo "<select name='{$name}' class='{$formInputCssClass}' {$required} {$multiple} size='{$size}' placeholder='{$placeholder}'>";
 foreach ($values as $key => $value) {
     if (!$isAssoc) {
         $key = $value;

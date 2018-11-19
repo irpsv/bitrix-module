@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", function(){
 	var replaceNames = function(form, message) {
 		var id = $(form).parent().attr('id')
-		var labels = window.formViewBootstrapLabels[id]
+		var labels = window.formView[id].labels
 		if (labels) {
 			for (var field in labels) {
 				var re = new RegExp('('+field+')', 'gi');
@@ -12,22 +12,34 @@ window.addEventListener("DOMContentLoaded", function(){
 		return message;
 	}
 	var alertSuccess = function(form, message) {
-		var alert = $(form).find(".formViewBootstrap__alert")
-		alert.show()
-		alert.removeClass("alert-danger")
-		alert.addClass("alert-success")
-		alert.text(message)
+		var id = $(form).parent().attr('id')
+		if (window.formView[id].isJsAlert) {
+			alert(message)
+			return;
+		}
+
+		var alertBlock = $(form).find(".formView__alert")
+		alertBlock.show()
+		alertBlock.removeClass("alert-danger")
+		alertBlock.addClass("alert-success")
+		alertBlock.text(message)
 	}
 	var alertError = function(form, message) {
-		var alert = $(form).find(".formViewBootstrap__alert")
+		var id = $(form).parent().attr('id')
+		if (window.formView[id].isJsAlert) {
+			alert(message)
+			return;
+		}
+
+		var alertBlock = $(form).find(".formView__alert")
 			message = replaceNames(form, message)
-		alert.show()
-		alert.removeClass("alert-success")
-		alert.addClass("alert-danger")
-		alert.text(message)
+		alertBlock.show()
+		alertBlock.removeClass("alert-success")
+		alertBlock.addClass("alert-danger")
+		alertBlock.text(message)
 	}
 
-	$(".formViewBootstrap[data-ajax=1]").each(function(){
+	$(".formView[data-ajax=1]").each(function(){
 		var form = $(this).find('form').first()
 		var successMessage = $(this).data('success') || 'Успешно';
 

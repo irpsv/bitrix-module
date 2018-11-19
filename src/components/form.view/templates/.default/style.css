@@ -1,0 +1,20 @@
+.formView {
+
+}
+.formView__row {
+
+}
+.formView__row.required label::after {
+	content: "*";
+	display: inline-block;
+	color: red;
+}
+.formView__input {
+
+}
+.formView__alert {
+	display: none;
+}
+.formView__buttons {
+
+}
