@@ -7,6 +7,7 @@ class PagerRequest
 	public $pager;
 	public $queryName;
 	public $queryValue;
+	public $isOnlyData = false;
 
 	public function __construct(Pager $pager, $queryName = 'p')
 	{
@@ -16,11 +17,10 @@ class PagerRequest
 
 	public function load(array $request)
 	{
-		// если queryName пустое, то загрузка не производится
-		if (!$this->queryName) {
+		if ($this->isOnlyData) {
 			return null;
 		}
-		
+
 		$pageNow = (int) ($request[$this->queryName] ?? 0);
 		if ($pageNow) {
 			$this->queryValue = $pageNow;

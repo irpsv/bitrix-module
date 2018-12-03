@@ -7,6 +7,7 @@ class SorterRequest
 	public $sorter;
 	public $queryName;
 	public $queryValue;
+	public $isOnlyData = false;
 
 	public function __construct(Sorter $sorter, $queryName = 's')
 	{
@@ -16,8 +17,7 @@ class SorterRequest
 
 	public function load(array $request)
 	{
-		// если queryName пустое, то загрузка не производится
-		if (!$this->queryName) {
+		if ($this->isOnlyData) {
 			return null;
 		}
 

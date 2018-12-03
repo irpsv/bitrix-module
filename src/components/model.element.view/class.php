@@ -3,13 +3,15 @@
 namespace bitrix_module\components\classes;
 
 use bitrix_module\data\ItemViewComponent;
+use bitrix_module\model\ExampleModel;
+
 
 \CModule::includeModule('bitrix_module');
 
 class ModelElementView extends \CBitrixComponent
 {
 	use ItemViewComponent;
-	
+
 	public function getIblockParams()
 	{
 		return [
@@ -24,18 +26,7 @@ class ModelElementView extends \CBitrixComponent
 		];
 	}
 
-	public function executeComponent()
-	{
-		$cacheTime = $this->arParams['CACHE_TIME'] ?? 3600;
-		$cacheAdditionalId = null;
-		$cachePath = preg_replace('/[^a-z0-9]/i', '_', __CLASS__);
-		if ($this->startResultCache($cacheTime, $cacheAdditionalId, $cachePath)) {
-			$this->run();
-			$this->endResultCache();
-		}
-	}
-
-	public function getRowByFilter(array $filter)
+	public function getModelByFilter(array $filter)
 	{
 		$iblockParams = $this->getIblockParams();
 		$select = $iblockParams['SELECT'] ?? ['ID'];
@@ -43,6 +34,23 @@ class ModelElementView extends \CBitrixComponent
 			$iblockParams['FILTER'] ?? [],
 			$filter
 		);
-		return \CIBlockElement::getList([], $filter, false, false, $select)->fetch();
+		$filter = ExampleModel::getMergedDefaultFilter($filter);
+		return ExampleModel::getModel([], $filter);
+	}
+
+	public function getLastUpdate();
+	{
+		$filter = $this->getFilter();
+		if (!$filter) {
+			return null;
+		}
+		$row = \CIBlockElement::getList(
+			['TIMESTAMP_X' => 'DESC'],
+			$filter,
+			false,
+			false,
+			['TIMESTAMP_X']
+		)->fetch();
+		return $row ? $row['TIMESTAMP_X'] : null;
 	}
 }

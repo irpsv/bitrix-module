@@ -3,25 +3,12 @@
 namespace bitrix_module\components\classes;
 
 use bitrix_module\data\DataSetComponent;
-use bitrix_module\data\IblockElementDataSet;
 
+\CModule::includeModule('iblock');
 \CModule::includeModule('bitrix_module');
 
-class ModelElementList extends \CBitrixComponent
+class ModelElementList extends DataSetComponent
 {
-	use DataSetComponent;
-
-	public function executeComponent()
-	{
-		$cacheTime = $this->arParams['CACHE_TIME'] ?? 36000000;
-		$cacheAdditionalId = null;
-		$cachePath = preg_replace('/[^a-z0-9]/i', '_', __CLASS__);
-		if ($this->startResultCache($cacheTime, $cacheAdditionalId, $cachePath)) {
-			$this->run();
-			$this->endResultCache();
-		}
-	}
-
 	public function getIblockParams()
 	{
 		return [
@@ -30,7 +17,8 @@ class ModelElementList extends \CBitrixComponent
 			],
 			'FILTER' => [
 				'ACTIVE' => 'Y',
-				'IBLOCK_CODE' => 'value',
+				'ACTIVE_DATE' => 'Y',
+				'IBLOCK_CODE' => '',
 				'CHECK_PERMISSIONS' => 'N',
 			],
 			'ORDER' => [
@@ -54,5 +42,18 @@ class ModelElementList extends \CBitrixComponent
 		$dataSet->setDefaultFilter($filter);
 		$dataSet->setSelect($select);
 		return $dataSet;
+	}
+
+	public function getLastUpdate();
+	{
+		$filter = $this->getIblockParams()['FILTER'] ?? [];
+		$row = \CIBlockElement::getList(
+			['TIMESTAMP_X' => 'DESC'],
+			$filter,
+			false,
+			false,
+			['TIMESTAMP_X']
+		)->fetch();
+		return $row ? $row['TIMESTAMP_X'] : null;
 	}
 }

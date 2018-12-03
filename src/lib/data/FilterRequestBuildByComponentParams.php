@@ -1,6 +1,6 @@
 <?php
 
-namespace arteast_simplecatalog\data;
+namespace bitrix_module\data;
 
 class FilterRequestBuildByComponentParams
 {
@@ -63,6 +63,7 @@ class FilterRequestBuildByComponentParams
 		}
 
 		$filterRequest->queryName = (string) ($this->arParams['REQUEST_NAME'] ?? 'f');
+		$filterRequest->isOnlyData = isset($this->arParams['ONLY_DATA']) && $this->arParams['ONLY_DATA'] !== 'N';
 		return $filterRequest;
 	}
 }

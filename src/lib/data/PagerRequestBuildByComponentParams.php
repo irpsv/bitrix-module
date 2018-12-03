@@ -44,6 +44,9 @@ class PagerRequestBuildByComponentParams
 		}
 
 		$pager = new Pager($pageSize, $totalCount, $pageNow);
-		return new PagerRequest($pager, $requestName);
+		$pagerRequest = new PagerRequest($pager, $requestName);
+		$pagerRequest->isOnlyData = isset($this->arParams['ONLY_DATA']) && $this->arParams['ONLY_DATA'] !== 'N';
+
+		return $pagerRequest;
 	}
 }

@@ -35,12 +35,15 @@ class SorterRequestBuildByComponentParams
 		if (!$fields && $active) {
 			$fields = array_keys($active);
 		}
-		
+
 		$sorter = new Sorter($fields);
 		foreach ($active as $name => $sort) {
 			$sorter->setActive($name, $sort);
 		}
 		$requestName = (string) ($this->arParams['REQUEST_NAME'] ?? 's');
-		return new SorterRequest($sorter, $requestName);
+		$sorterRequest = new SorterRequest($sorter, $requestName);
+		$sorterRequest->isOnlyData = isset($this->arParams['ONLY_DATA']) && $this->arParams['ONLY_DATA'] !== 'N';
+
+		return $sorterRequest;
 	}
 }

@@ -6,6 +6,7 @@ class FilterRequest
 {
 	public $filter;
 	public $queryName;
+	public $isOnlyData = false;
 
 	public function __construct(Filter $filter, string $queryName = 'f')
 	{
@@ -15,11 +16,10 @@ class FilterRequest
 
 	public function load(array $request)
 	{
-		// если queryName пустое, то загрузка не производится
-		if (!$this->queryName) {
+		if ($this->isOnlyData) {
 			return null;
 		}
-		
+
 		$isLoad = false;
 		$requestValues = $request[$this->queryName] ?? [];
 		if ($requestValues) {

@@ -3,9 +3,15 @@
 class bitrix_module extends CModule
 {
     public $MODULE_ID = "bitrix_module";
-    public $MODULE_NAME = "Шаблон модуля";
+    public $MODULE_NAME = "ArtEast. Модуль";
 	public $MODULE_VERSION = '1.0';
-  	public $MODULE_VERSION_DATE = '2018-09-12';
+  	public $MODULE_VERSION_DATE = '2018-12-12';
+
+    public function __construct()
+    {
+        $this->PARTNER_NAME = "ArtEast";
+        $this->PARTNER_URI = "https://arteast.ru";
+    }
 
     public function DoInstall()
     {
@@ -14,6 +20,8 @@ class bitrix_module extends CModule
             include $file;
         }
 
+        $this->copyInstallFiles();
+        $this->addUrlRewriteRules();
 		$this->addSymlinkAdmin();
 		$this->addSymlinkComponents();
         RegisterModule($this->MODULE_ID);
@@ -57,6 +65,47 @@ class bitrix_module extends CModule
 			symlink($dir, $this->getBitrixComponentsDir());
 		}
 	}
+
+    public function addUrlRewriteRules()
+    {
+        if (file_exists(__DIR__.'/urlrewrite.php')) {
+            $rules = include __DIR__.'/urlrewrite.php';
+            if (is_array($rules)) {
+                foreach ($rules as $rule) {
+                    \CUrlRewriter::add($rule);
+                }
+            }
+        }
+    }
+
+    public function copyInstallFiles()
+    {
+        $dir = __DIR__.'/public';
+        if (file_exists($dir) && is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
+                }
+
+                $sourcePath = $dir.'/'.$file;
+                $targetPath = $_SERVER['DOCUMENT_ROOT'].'/'.$file;
+                if (file_exists($targetPath)) {
+                    if (is_dir($targetPath)) {
+                        // pass
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                else if (!file_exists($targetPath)) {
+                    mkdir($targetPath, 0755, true);
+                }
+
+                CopyDirFiles($sourcePath, $targetPath, false, true, false);
+            }
+        }
+    }
 
 	public function removeSymlinkAdmin()
 	{

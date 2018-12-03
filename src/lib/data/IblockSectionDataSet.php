@@ -28,7 +28,7 @@ class IblockSectionDataSet extends DataSet
 		$this->select = $select;
 	}
 
-	protected function getFilterValue()
+	public function getFilterValue()
 	{
 		$filter = $this->defaultFilter ?: [];
 		if ($this->filter) {
@@ -40,7 +40,7 @@ class IblockSectionDataSet extends DataSet
 		return $filter;
 	}
 
-	protected function getOrderValue()
+	public function getOrderValue()
 	{
 		$order = $this->defaultOrder ?: [];
 		if ($this->sorter) {
