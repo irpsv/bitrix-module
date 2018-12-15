@@ -206,4 +206,23 @@ abstract class ElementActiveRecord
 			return false;
 		}
 	}
+	
+	public function getRow()
+	{
+		if ($this->id) {
+			return \CIBlockElement::getById($this->id)->fetch();
+		}
+		return null;
+	}
+
+	public function getDetailUrl()
+	{
+		$row = $this->getRow();
+		return \CIBlock::replaceDetailUrl(
+			$row['DETAIL_PAGE_URL'],
+			$row,
+			false,
+			'E'
+		);
+	}
 }

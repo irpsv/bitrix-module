@@ -2,11 +2,6 @@
 
 namespace bitrix_module\data;
 
-use bitrix_module\data\IblockElementDataSet;
-use bitrix_module\data\PagerRequestBuildByComponentParams;
-use bitrix_module\data\FilterRequestBuildByComponentParams;
-use bitrix_module\data\SorterRequestBuildByComponentParams;
-
 /******
 Параметры компонента:
 
