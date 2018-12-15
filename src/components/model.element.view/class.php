@@ -18,6 +18,7 @@ class ModelElementView extends ItemViewComponent
 			],
 			'FILTER' => [
 				'ACTIVE' => 'Y',
+				'ACTIVE_DATE' => 'Y',
 				'IBLOCK_ID' => ExampleModel::getIblockId(),
 				'CHECK_PERMISSIONS' => 'N',
 			],
