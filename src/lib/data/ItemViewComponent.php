@@ -57,6 +57,8 @@ abstract class ItemViewComponent extends \CBitrixComponent
 
     public function executeComponent()
     {
+		\CModule::includeModule('iblock');
+		
         $cacheTime = $this->arParams['CACHE_TIME'] ?? 3600;
         $cacheAdditionalId = null;
         $cachePath = preg_replace('/[^a-z0-9]/i', '_', get_class($this));
@@ -90,8 +92,6 @@ abstract class ItemViewComponent extends \CBitrixComponent
 
     public function run()
 	{
-		\CModule::includeModule('iblock');
-
         $filter = $this->getFilter();
         if ($filter) {
             $row = $this->getModelByFilter($filter);
