@@ -8,10 +8,8 @@ use bitrix_module\model\ExampleModel;
 
 \CModule::includeModule('bitrix_module');
 
-class ModelElementView extends \CBitrixComponent
+class ModelElementView extends ItemViewComponent
 {
-	use ItemViewComponent;
-
 	public function getIblockParams()
 	{
 		return [
@@ -20,7 +18,7 @@ class ModelElementView extends \CBitrixComponent
 			],
 			'FILTER' => [
 				'ACTIVE' => 'Y',
-				'IBLOCK_CODE' => '',
+				'IBLOCK_ID' => ExampleModel::getIblockId(),
 				'CHECK_PERMISSIONS' => 'N',
 			],
 		];
@@ -38,12 +36,8 @@ class ModelElementView extends \CBitrixComponent
 		return ExampleModel::getModel([], $filter);
 	}
 
-	public function getLastUpdate();
+	public function getLastUpdate(array $filter)
 	{
-		$filter = $this->getFilter();
-		if (!$filter) {
-			return null;
-		}
 		$row = \CIBlockElement::getList(
 			['TIMESTAMP_X' => 'DESC'],
 			$filter,

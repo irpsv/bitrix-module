@@ -2,7 +2,9 @@
 
 namespace bitrix_module\components\classes;
 
-use bitrix_module\data\DataSetComponent;
+use arteast_fitness\model\ExampleModel;
+use arteast_fitness\data\DataSetComponent;
+use arteast_fitness\data\IblockElementDataSet;
 
 \CModule::includeModule('iblock');
 \CModule::includeModule('bitrix_module');
@@ -18,7 +20,7 @@ class ModelElementList extends DataSetComponent
 			'FILTER' => [
 				'ACTIVE' => 'Y',
 				'ACTIVE_DATE' => 'Y',
-				'IBLOCK_CODE' => '',
+				'IBLOCK_ID' => ExampleModel::getIblockId(),
 				'CHECK_PERMISSIONS' => 'N',
 			],
 			'ORDER' => [
