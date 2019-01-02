@@ -2,7 +2,7 @@
 
 require_once $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php";
 
-$moduleId = "moduleId";
+$moduleId = "bitrix_module";
 if ($APPLICATION->GetGroupRight($moduleId) == "D") {
     $APPLICATION->AuthForm("Не достаточно прав");
 }
