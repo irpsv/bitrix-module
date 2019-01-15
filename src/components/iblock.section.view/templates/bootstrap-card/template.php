@@ -10,19 +10,19 @@ $templateData['BUTTONS'] = $arResult['BUTTONS'];
 
 $row = $arResult['ROW'];
 $fields = $arParams['FIELDS'] ?? [
-	'TOP_IMAGE' => 'PREVIEW_PICTURE',
-	'PREVIEW' => 'PREVIEW_TEXT',
-	'LINK' => 'DETAIL_PAGE_URL',
+	'TOP_IMAGE' => 'PICTURE',
+	'PREVIEW' => 'DESCRIPTION',
+	'LINK' => 'SECTION_PAGE_URL',
 	'TITLE' => 'NAME',
 ];
-$header = templates\componentIblockElementViewGetFieldValue($row, $fields['HEADER']);
-$topImage = templates\componentIblockElementViewGetFieldValue($row, $fields['TOP_IMAGE']);
-$title = templates\componentIblockElementViewGetFieldValue($row, $fields['TITLE']);
-$subTitle = templates\componentIblockElementViewGetFieldValue($row, $fields['SUB_TITLE']);;
-$preview = templates\componentIblockElementViewGetFieldValue($row, $fields['PREVIEW']);
-$link = templates\componentIblockElementViewGetFieldValue($row, $fields['LINK']);;
-$footer = templates\componentIblockElementViewGetFieldValue($row, $fields['FOOTER']);
-$bottomImage = templates\componentIblockElementViewGetFieldValue($row, $fields['BOTTOM_IMAGE']);
+$header = templates\componentIblockSectionViewGetFieldValue($row, $fields['HEADER']);
+$topImage = templates\componentIblockSectionViewGetFieldValue($row, $fields['TOP_IMAGE']);
+$title = templates\componentIblockSectionViewGetFieldValue($row, $fields['TITLE']);
+$subTitle = templates\componentIblockSectionViewGetFieldValue($row, $fields['SUB_TITLE']);;
+$preview = templates\componentIblockSectionViewGetFieldValue($row, $fields['PREVIEW']);
+$link = templates\componentIblockSectionViewGetFieldValue($row, $fields['LINK']);;
+$footer = templates\componentIblockSectionViewGetFieldValue($row, $fields['FOOTER']);
+$bottomImage = templates\componentIblockSectionViewGetFieldValue($row, $fields['BOTTOM_IMAGE']);
 $links = $fields['LINKS'] ?? [];
 $buttons = $fields['BUTTONS'] ?? [];
 
@@ -52,11 +52,11 @@ $styleClasses = $arParams['CSS_CLASS'] ?? '';
 			echo "<p class='card-text'>{$preview}</p>";
 		}
 		foreach ($links as $item) {
-			$link = $item['LINK'] ?? $row['DETAIL_PAGE_URL'];
+			$link = $item['LINK'] ?? $row['SECTION_PAGE_URL'];
 			echo "<a href='{$link}' class='card-link'>{$item['TEXT']}</a>";
 		}
 		foreach ($buttons as $item) {
-			$link = $item['LINK'] ?? $row['DETAIL_PAGE_URL'];
+			$link = $item['LINK'] ?? $row['SECTION_PAGE_URL'];
 			echo "<a href='{$link}' class='btn btn-primary'>{$item['TEXT']}</a>";
 		}
 		echo "</div>";

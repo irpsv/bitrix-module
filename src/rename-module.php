@@ -1,3 +1,53 @@
 <?php
 
-// скрипт для переименования модуля
+$names = [
+    // название модуля (используется в описании модуля и компонентов)
+    'bitrix_module_name' => '',
+    // namespace модуля
+    'bitrix_module' => '',
+    // название модуля в битрикс
+    'bitrix.module' => '',
+];
+$exts = [
+    "php",
+];
+$exclude = [
+    ".",
+    "..",
+    "rename-module.php",
+];
+
+$baseDir = __DIR__;
+
+//
+// сканирование
+//
+function renameDirFiles($dirPath) {
+    global $names, $exts, $exclude;
+    $files = scandir($dirPath);
+    foreach ($files as $file) {
+        if (in_array($file, $exclude)) {
+            continue;
+        }
+
+        $filePath = $dirPath.'/'.$file;
+        echo "process file: {$filePath}".PHP_EOL;
+
+        if (is_dir($filePath)) {
+            renameDirFiles($filePath);
+        }
+        else {
+            $fileExt = end(explode(".", $file));
+            if (in_array($fileExt, $exts)) {
+                $content = file_get_contents($filePath);
+                $content = str_replace(
+                    array_keys($names),
+                    array_values($names),
+                    $content
+                );
+                file_put_contents($filePath, $content);
+            }
+        }
+    }
+}
+renameDirFiles($baseDir);
