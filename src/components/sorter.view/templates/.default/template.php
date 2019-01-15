@@ -10,7 +10,8 @@ if ($arResult['ACTIVE']) {
 	$activeSort = current($arResult['ACTIVE']);
 }
 
-$this->addExternalCss("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
+// добавить в шаблон
+// $this->addExternalCss("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
 
 ?>
 <div class="sorterView">

@@ -2,7 +2,7 @@
 
 class bitrix_module extends CModule
 {
-    public $MODULE_ID = "bitrix_module";
+    public $MODULE_ID = "bitrix.module";
     public $MODULE_NAME = "ArtEast. Модуль";
 	public $MODULE_VERSION = '1.0';
   	public $MODULE_VERSION_DATE = '2018-12-12';

@@ -77,4 +77,20 @@ class IblockElementDataSet extends DataSet
 		}
 		return $rows;
 	}
+
+	public function getIblockId()
+	{
+		$activeFilter = $this->filter ? $this->filter->getActive() : [];
+		if (isset($activeFilter['IBLOCK_ID'])) {
+			return $activeFilter['IBLOCK_ID'];
+		}
+
+		$defaultFilter = $this->defaultFilter ?: [];
+		if (isset($defaultFilter['IBLOCK_ID'])) {
+			return $defaultFilter['IBLOCK_ID'];
+		}
+
+		$row = \CIBlockElement::getList([], $defaultFilter, false, false, ['IBLOCK_ID'])->fetch();
+		return $row ? $row['IBLOCK_ID'] : null;
+	}
 }

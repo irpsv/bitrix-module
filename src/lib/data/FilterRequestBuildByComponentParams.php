@@ -34,6 +34,16 @@ class FilterRequestBuildByComponentParams
 		$active = (array) ($this->arParams['ACTIVE'] ?? []);
 
 		if ($iblock) {
+			if (!$iblock['ID'] && $iblock['CODE']) {
+				\CModule::includeModule('iblock');
+				$iblockRow = \CIBlock::getList([], [
+					'CODE' => $iblock['CODE'],
+				])->fetch();
+				if ($iblockRow) {
+					$iblock['ID'] = $iblockRow['ID'];
+				}
+				unset($iblockRow);
+			}
 			$filterRequest = FilterRequestBuildByIblockParams::runStatic(
 				$iblock['ID'],
 				$iblock['FIELDS']
