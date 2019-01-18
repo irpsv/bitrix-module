@@ -7,6 +7,18 @@ function componentIblockElementViewGetFieldValue(array $row, $field)
 	if (!$field) {
 		return null;
 	}
+	else if (preg_match_all('/(\{this\.([\w\_\-]+)\})/', $field, $m)) {
+		$replaces = $m[0];
+		$fieldNames = $m[2];
+		for ($i=0; $i<count($replaces); $i++) {
+			$replace = $replaces[$i];
+			$fieldName = $fieldNames[$i];
+			$fieldValue = componentIblockElementViewGetFieldValue($row, $fieldName);
+
+			$field = str_replace($replace, $fieldValue, $field);
+		}
+		return htmlspecialchars_decode($field);
+	}
 	else if (is_callable($field)) {
 		return call_user_func($field, $row);
 	}
