@@ -15,21 +15,21 @@ $fields = $arParams['FIELDS'] ?? [
 	'LINK' => 'DETAIL_PAGE_URL',
 	'TITLE' => 'NAME',
 ];
-$header = templates\componentIblockElementViewGetFieldValue($row, $fields['HEADER']);
-$topImage = templates\componentIblockElementViewGetFieldValue($row, $fields['TOP_IMAGE']);
-$title = templates\componentIblockElementViewGetFieldValue($row, $fields['TITLE']);
-$subTitle = templates\componentIblockElementViewGetFieldValue($row, $fields['SUB_TITLE']);;
-$preview = templates\componentIblockElementViewGetFieldValue($row, $fields['PREVIEW']);
-$link = templates\componentIblockElementViewGetFieldValue($row, $fields['LINK']);;
-$footer = templates\componentIblockElementViewGetFieldValue($row, $fields['FOOTER']);
-$bottomImage = templates\componentIblockElementViewGetFieldValue($row, $fields['BOTTOM_IMAGE']);
+$header = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['HEADER']);
+$topImage = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['TOP_IMAGE']);
+$title = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['TITLE']);
+$subTitle = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['SUB_TITLE']);;
+$preview = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['PREVIEW']);
+$link = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['LINK']);;
+$footer = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['FOOTER']);
+$bottomImage = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['BOTTOM_IMAGE']);
 $links = $fields['LINKS'] ?? [];
 $buttons = $fields['BUTTONS'] ?? [];
 
 $styleClasses = $arParams['CSS_CLASS'] ?? '';
 
 ?>
-<div id="<?= $arResult['HTML_ID'] ?>" class="modelElementView modelElementView_bootstrapCard">
+<div id="<?= $arResult['HTML_ID'] ?>" class="bitrix_moduleiblockElementViewBootstrapCard">
     <div class="card <?= $styleClasses ?>">
 		<?php
 		if ($topImage) {

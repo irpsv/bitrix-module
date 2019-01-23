@@ -1,6 +1,6 @@
 window.FormView = function(config) {
 	var self = {}
-	var form = $(config.selector);
+	var form = $(config.selector).find('form');
 	var responseBlock = form.find('.jsFormViewResponse')
 
 	var replaceNames = function(message) {
@@ -14,14 +14,12 @@ window.FormView = function(config) {
 		return message;
 	}
 	var alertSuccess = function(message) {
-		console.log("alertSuccess", message);
 		responseBlock.removeClass("alert-danger")
 		responseBlock.addClass("alert-success")
 		responseBlock.text(message)
 		responseBlock.show(200)
 	}
 	var alertError = function(message) {
-		console.log("alertError", message);
 		responseBlock.removeClass("alert-success")
 		responseBlock.addClass("alert-danger")
 		responseBlock.text(
@@ -41,7 +39,7 @@ window.FormView = function(config) {
 				try {
 					var jsonData = JSON.parse(data)
 					if (jsonData.success) {
-						alertSuccess(successMessage)
+						alertSuccess(config.successText)
 					}
 					else if (jsonData.error) {
 						btn.prop("disabled", false)
@@ -55,7 +53,7 @@ window.FormView = function(config) {
 				catch (e) {
 					btn.prop("disabled", false)
 					alertError("Некорректный ответ сервера")
-					console.log("response", data);
+					console.log("response", e, data);
 				}
 			},
 			error: function(e) {

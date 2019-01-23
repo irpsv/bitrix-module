@@ -13,11 +13,11 @@ $filterRequest = $arResult['FILTER_REQUEST'];
 $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 
 ?>
-<div class="iblockElementList iblockElementList_grid">
+<div id="<?= $arResult['HTML_ID'] ?>" class="bitrix_moduleiblockElementListGrid">
 	<div class="row">
 		<?php if ($isViewFilter): ?>
 			<div class="col-12 col-lg-4 col-xl-3">
-				<div class="iblockElementList__filter">
+				<div class="bitrix_moduleiblockElementListGrid__filter">
 					<?php
 					$filterParams = [
 						'FILTER_REQUEST' => $filterRequest,
@@ -34,9 +34,9 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 		<?php else: ?>
 			<div class="col-12">
 		<?php endif; ?>
-				<div class="iblockElementList__content">
+				<div class="bitrix_moduleiblockElementListGrid__content">
 					<?php if ($sorterRequest && !$sorterRequest->isOnlyData): ?>
-						<div class="iblockElementList__sorter">
+						<div class="bitrix_moduleiblockElementListGrid__sorter">
 							<?php
 							$sorterParams = [
 								'SORTER_REQUEST' => $sorterRequest,
@@ -47,7 +47,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 						</div>
 					<?php endif; ?>
 
-					<div class="iblockElementList__items">
+					<div class="bitrix_moduleiblockElementListGrid__items">
 						<div class="row">
 							<?php
 							$items = $dataSet->getItems();
@@ -100,7 +100,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 					</div>
 
 					<?php if ($pagerRequest && !$pagerRequest->isOnlyData): ?>
-						<div class="iblockElementList__pager">
+						<div class="bitrix_moduleiblockElementListGrid__pager">
 							<?php
 							$pagerParams = [
 								'PAGER_REQUEST' => $pagerRequest,

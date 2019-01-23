@@ -15,21 +15,18 @@ $row = $arResult['ROW'];
 $title = $row['NAME'];
 $image = $row['DETAIL_PICTURE'];
 $content = $row['DETAIL_TEXT'];
-$dateTime = $row['TIMESTAMP_X'];
 
 ?>
-<div class="modelElementView modelElementView_detail">
-    <h1 class="page-title">
+<div id="<?= $arResult['HTML_ID'] ?>" class="bitrix_moduleIblockElementViewDetail">
+    <h1 class="bitrix_moduleIblockElementViewDetail__title">
 		<?= $title ?>
 	</h1>
-	<div class="mb-4">
-		<img class="w-100" src="<?= $image['SRC'] ?>" alt="<?= $image['ALT'] ?>">
-	</div>
-	<div class="mb-4">
+    <?php if ($image): ?>
+    <div class="bitrix_moduleIblockElementViewDetail__banner">
+        <img class="w-100" src="<?= $image['SRC'] ?>" alt="<?= $image['ALT'] ?>">
+    </div>
+    <?php endif; ?>
+	<div class="bitrix_moduleIblockElementViewDetail__content">
 		<?= $content ?>
-	</div>
-	<hr>
-	<div class="mb-4">
-		<?= $dateTime ?>
 	</div>
 </div>

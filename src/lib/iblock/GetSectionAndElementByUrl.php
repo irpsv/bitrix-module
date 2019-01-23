@@ -17,7 +17,7 @@ class GetSectionAndElementByUrl
 
     public function __construct(string $urlPart, string $iblockCode)
     {
-        $this->urlPart = $urlPart;
+        $this->urlPart = trim($urlPart, '/');
         $this->iblockCode = $iblockCode;
     }
 
@@ -27,23 +27,20 @@ class GetSectionAndElementByUrl
         $len = count($parts);
         if ($len == 1) {
             return [
-                $this->getSectionByCode($parts[0]),
+                $this->getSectionsByCode($parts[0])[0],
                 null
             ];
         }
         else {
-            $element = null;
-            $section = $this->getSectionByCode($parts[$len-1]);
-            if ($section) {
+            $sections = $this->getSectionsByCode($parts[$len-1]);
+            foreach ($sections as $section) {
                 $sectionPath = \CIBlock::replaceDetailUrl($section['SECTION_PAGE_URL'], $section, false, 'S');
                 if (trim($sectionPath, '/') === trim($this->urlPart, '/')) {
                     return [$section, null];
                 }
             }
-            else {
-                $element = $this->getElementByCode($parts[$len-1]);
-            }
 
+            $element = $this->getElementByCode($parts[$len-1]);
             if (!$element) {
                 return [null, null];
             }
@@ -53,36 +50,42 @@ class GetSectionAndElementByUrl
                 return [null, null];
             }
 
-            $section = $this->getSectionByCode($parts[$len-2]);
-            if (!$section) {
+            $sections = $this->getSectionsByCode($parts[$len-2]);
+            if (!$sections) {
                 return [null, null];
             }
 
-            $sectionHasElement = \CIBlockSection::getList([], [
-                'ID' => $section['ID'],
-                'HAS_ELEMENT' => $element['ID'],
-            ])->selectedRowsCount() > 0;
-            if (!$sectionHasElement) {
-                return [null, null];
-            }
-
-            $sectionPath = \CIBlock::replaceSectionUrl($section['SECTION_PAGE_URL'], $section, false, 'S');
+            $section = null;
             $urlPartSection = join('/', array_slice($parts, 0, -1));
-            if (trim($sectionPath, '/') !== trim($urlPartSection, '/')) {
-                return [null, null];
+            foreach ($sections as $section) {
+                $sectionHasElement = \CIBlockSection::getList([], [
+                    'ID' => $section['ID'],
+                    'HAS_ELEMENT' => $element['ID'],
+                ])->selectedRowsCount() > 0;
+                if ($sectionHasElement) {
+                    $sectionPath = \CIBlock::replaceSectionUrl($section['SECTION_PAGE_URL'], $section, false, 'S');
+                    if (trim($sectionPath, '/') === trim($urlPartSection, '/')) {
+                        return [$section, $element];
+                    }
+                }
             }
-            return [$section, $element];
+            return [null, null];
         }
     }
 
-    public function getSectionByCode(string $code)
+    public function getSectionsByCode(string $code)
     {
+        $ret = [];
         $filter = [
             'CODE' => $code,
             'IBLOCK_CODE' => $this->iblockCode,
             'CHECK_PERMISSIONS' => 'N',
         ];
-        return \CIBlockSection::getList([], $filter)->fetch();
+        $result = \CIBlockSection::getList([], $filter, false, ['ID', 'NAME', 'CODE', 'SECTION_PAGE_URL']);
+        while ($row = $result->fetch()) {
+            $ret[] = $row;
+        }
+        return $ret;
     }
 
     public function getElementByCode(string $code)

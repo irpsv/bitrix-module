@@ -6,12 +6,6 @@ if (!$row) {
 }
 
 //
-// SEO
-//
-$seoValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($row['IBLOCK_ID'], $row['ID']);
-$arResult['SEO_VALUES'] = $seoValues->getValues();
-
-//
 // BUTTONS
 //
 $arResult['HTML_ID'] = $this->GetEditAreaId($row['ID']);
@@ -47,8 +41,8 @@ if ($row['DETAIL_PAGE_URL']) {
 //
 if ($row['PREVIEW_PICTURE']) {
 	$sizes = $arParams['PREVIEW_PICTURE_SIZES'] ?? [
-        'width' => 500,
-        'height' => 500 / 1.618, // золотое сечение
+        'width' => 350,
+        'height' => 350 / 1.618, // золотое сечение
     ];
 	if ($sizes) {
 		$row['PREVIEW_PICTURE'] = \CFile::ResizeImageGet($row['PREVIEW_PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);

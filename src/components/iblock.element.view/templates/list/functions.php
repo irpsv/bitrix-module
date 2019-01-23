@@ -2,7 +2,7 @@
 
 namespace bitrix_module\components\classes\templates;
 
-function componentIblockElementViewBootstrapCardGetFieldValue(array $row, $field)
+function componentIblockElementViewListGetFieldValue(array $row, $field)
 {
 	if (!$field) {
 		return null;
@@ -13,7 +13,7 @@ function componentIblockElementViewBootstrapCardGetFieldValue(array $row, $field
 		for ($i=0; $i<count($replaces); $i++) {
 			$replace = $replaces[$i];
 			$fieldName = $fieldNames[$i];
-			$fieldValue = componentIblockElementViewBootstrapCardGetFieldValue($row, $fieldName);
+			$fieldValue = componentIblockElementViewListGetFieldValue($row, $fieldName);
 
 			$field = str_replace($replace, $fieldValue, $field);
 		}
