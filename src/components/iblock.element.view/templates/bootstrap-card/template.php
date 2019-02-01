@@ -1,41 +1,47 @@
 <?php
 
-include_once __DIR__.'/functions.php';
-
-use bitrix_module\components\classes\templates;
+// include_once __DIR__.'/functions.php';
+//
+// use arteast_actions\components\classes\templates;
+//
+// $title = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, 'NAME');
+// $preview = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, '{this.PROPERTY_TITLE}');
 
 // проброс значений в component_epilog
 $templateData['HTML_ID'] = $arResult['HTML_ID'];
 $templateData['BUTTONS'] = $arResult['BUTTONS'];
 
-$row = $arResult['ROW'];
-$fields = $arParams['FIELDS'] ?? [
-	'TOP_IMAGE' => 'PREVIEW_PICTURE',
-	'PREVIEW' => 'PREVIEW_TEXT',
-	'LINK' => 'DETAIL_PAGE_URL',
-	'TITLE' => 'NAME',
+$row		= $arResult['ROW'];
+$header		= null;
+$topImage	= $row['PREVIEW_PICTURE'];
+$title		= $row['NAME'];
+$subTitle	= null;
+$preview	= $row['PREVIEW_TEXT'];
+$link		= $row['DETAIL_PAGE_URL'];
+$footer		= null;
+$bottomImage= null;
+$links = [];
+$buttons = [
+	[
+		'TEXT' => 'Подробнее',
+	],
 ];
-$header = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['HEADER']);
-$topImage = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['TOP_IMAGE']);
-$title = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['TITLE']);
-$subTitle = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['SUB_TITLE']);;
-$preview = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['PREVIEW']);
-$link = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['LINK']);;
-$footer = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['FOOTER']);
-$bottomImage = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['BOTTOM_IMAGE']);
-$links = $fields['LINKS'] ?? [];
-$buttons = $fields['BUTTONS'] ?? [];
 
 $styleClasses = $arParams['CSS_CLASS'] ?? '';
 
 ?>
-<div id="<?= $arResult['HTML_ID'] ?>" class="bitrix_moduleiblockElementViewBootstrapCard">
+<div id="<?= $arResult['HTML_ID'] ?>" class="arteast_actionsiblockElementViewBootstrapCard">
     <div class="card <?= $styleClasses ?>">
 		<?php
 		if ($topImage) {
-			echo "<a href='{$link}'>
-			<img class='card-img-top' src='{$topImage['SRC']}' alt='{$topImage['ALT']}'>
-			</a>";
+			if ($link) {
+				echo "<a href='{$link}'>
+				<img class='card-img-top' src='{$topImage['SRC']}' alt='{$topImage['ALT']}'>
+				</a>";
+			}
+			else {
+				echo "<img class='card-img-top' src='{$topImage['SRC']}' alt='{$topImage['ALT']}'>";
+			}
 		}
 		if ($header) {
 			echo "<div class='card-header'>{$header}</div>";
@@ -43,7 +49,14 @@ $styleClasses = $arParams['CSS_CLASS'] ?? '';
 
 		echo "<div class='card-body'>";
 		if ($title) {
-			echo "<h5 class='card-title'>{$title}</h5>";
+			if ($link) {
+				echo "<a href='{$link}'>
+				<h5 class='card-title'>{$title}</h5>
+				</a>";
+			}
+			else {
+				echo "<h5 class='card-title'>{$title}</h5>";
+			}
 		}
 		if ($subTitle) {
 			echo "<h6 class='card-subtitle mb-2 text-muted'>{$subTitle}</h6>";

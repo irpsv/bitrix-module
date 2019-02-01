@@ -37,7 +37,8 @@ function renameDirFiles($dirPath) {
             renameDirFiles($filePath);
         }
         else {
-            $fileExt = end(explode(".", $file));
+			$fileInfo = explode(".", $file);
+            $fileExt = end($fileInfo);
             if (in_array($fileExt, $exts)) {
                 $content = file_get_contents($filePath);
                 $content = str_replace(
