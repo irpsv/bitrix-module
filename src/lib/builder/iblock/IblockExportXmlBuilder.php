@@ -39,36 +39,65 @@ class IblockExportXmlBuilder extends BaseMapperBuilder
         return trim("
 <?php
 
-\\CModule::includeModule('iblock');
+\CModule::includeModule('iblock');
 
-\$NS = \$sectionsMap = \$pricesMap = null;
+\$GLOBALS['CACHE_MANAGER']->CleanAll();
+
 \$workDir = __DIR__.'/iblock/';
 \$filePath = \"{\$workDir}/{$this->saveFile}\";
-\$iblockTypeId  = '{$iblockTypeId}';
-\$siteId = \Bitrix\Main\SiteTable::getRow([
+\$siteId = \\Bitrix\\Main\\SiteTable::getRow([
     'filter' => [
         '=DEF' => 'Y',
     ],
 ])['LID'];
 
-\$obXMLFile = new \CIBlockXMLFile;
-\$obXMLFile->DropTemporaryTables();
-\$obXMLFile->CreateTemporaryTables();
+\$NS = [
+	'STEP' => 0,
+	'IBLOCK_TYPE' => '{$iblockTypeId}',
+	'LID' => [
+		\$siteId
+	],
+	'ACTION' => 'N',
+	'PREVIEW' => true,
+];
+\$obXMLFile = new \\CIBlockXMLFile;
+
+\\CIBlockXMLFile::DropTemporaryTables();
+\\CIBlockXMLFile::CreateTemporaryTables();
 
 \$file = fopen(\$filePath, 'rb');
 \$obXMLFile->ReadXMLToDatabase(\$file, \$NS, 0);
+fclose(\$file);
+
 \CIBlockXMLFile::IndexTemporaryTables();
 
-\$obCatalog = new \CIBlockCMLImport;
-\$obCatalog->InitEx(\$NS, [
-    'files_dir' => \$workDir
-]);
-\$obCatalog->ImportMetaData([1,2], \$iblockTypeId, \$siteId);
+\$obCatalog = new \\CIBlockCMLImport;
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
+\$obCatalog->ImportMetaData(array(1, 2), \$NS['IBLOCK_TYPE'], \$NS['LID']);
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
 \$obCatalog->ImportSections();
-\$obCatalog->SectionsResort();
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
+\$obCatalog->DeactivateSections('A');
+
+\$startTime = time();
+\$pricesMap = false;
+\$sectionsMap = false;
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
 \$obCatalog->ReadCatalogData(\$sectionsMap, \$pricesMap);
-\$obCatalog->ImportElements(time(), 0);
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
+\$obCatalog->ImportElements(\$startTime, 0);
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
+\$obCatalog->DeactivateElement(\$NS['ACTION'], \$startTime, 0);
+
+\$obCatalog->Init(\$NS, \$workDir, true, \$NS['PREVIEW'], false, true);
 \$obCatalog->ImportProductSets();
+
+unset(\$obXMLFile, \$obCatalog);
 
 ?>
         ");

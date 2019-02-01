@@ -48,14 +48,23 @@ if ($row['DETAIL_PAGE_URL']) {
 if ($row['PREVIEW_PICTURE']) {
 	$sizes = $arParams['PREVIEW_PICTURE_SIZES'] ?? [
         'width' => 500,
-        'height' => 500 / 1.618, // золотое сечение
+        'height' => ceil(500 / 1.618),
     ];
+
+    $row['PREVIEW_PICTURE'] = \CFile::getFileArray($row['PREVIEW_PICTURE']);
 	if ($sizes) {
+        if ($sizes['width'] > $row['PREVIEW_PICTURE']['WIDTH']) {
+            $k = $row['PREVIEW_PICTURE']['WIDTH'] / $sizes['width'];
+            $sizes['width'] *= $k;
+            $sizes['height'] *= $k;
+        }
+        else if ($sizes['height'] > $row['PREVIEW_PICTURE']['HEIGHT']) {
+            $k = $row['PREVIEW_PICTURE']['HEIGHT'] / $sizes['height'];
+            $sizes['width'] *= $k;
+            $sizes['height'] *= $k;
+        }
 		$row['PREVIEW_PICTURE'] = \CFile::ResizeImageGet($row['PREVIEW_PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);
 		$row['PREVIEW_PICTURE']['SRC'] = $row['PREVIEW_PICTURE']['src'];
-	}
-	else {
-		$row['PREVIEW_PICTURE'] = \CFile::getFileArray($row['PREVIEW_PICTURE']);
 	}
 	if ($row['PREVIEW_PICTURE'] && $arResult['SEO_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_ALT']) {
 		$row['PREVIEW_PICTURE']['ALT'] = $arResult['SEO_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_ALT'];
@@ -64,12 +73,21 @@ if ($row['PREVIEW_PICTURE']) {
 
 if ($row['DETAIL_PICTURE']) {
 	$sizes = $arParams['DETAIL_PICTURE_SIZES'] ?? [];
+
+    $row['DETAIL_PICTURE'] = \CFile::getFileArray($row['DETAIL_PICTURE']);
 	if ($sizes) {
+        if ($sizes['width'] > $row['DETAIL_PICTURE']['WIDTH']) {
+            $k = $row['DETAIL_PICTURE']['WIDTH'] / $sizes['width'];
+            $sizes['width'] *= $k;
+            $sizes['height'] *= $k;
+        }
+        else if ($sizes['height'] > $row['DETAIL_PICTURE']['HEIGHT']) {
+            $k = $row['DETAIL_PICTURE']['HEIGHT'] / $sizes['height'];
+            $sizes['width'] *= $k;
+            $sizes['height'] *= $k;
+        }
 		$row['DETAIL_PICTURE'] = \CFile::ResizeImageGet($row['DETAIL_PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);
 		$row['DETAIL_PICTURE']['SRC'] = $row['DETAIL_PICTURE']['src'];
-	}
-	else {
-		$row['DETAIL_PICTURE'] = \CFile::getFileArray($row['DETAIL_PICTURE']);
 	}
 	if ($row['DETAIL_PICTURE'] && $arResult['SEO_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_ALT']) {
 		$row['DETAIL_PICTURE']['ALT'] = $arResult['SEO_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_ALT'];

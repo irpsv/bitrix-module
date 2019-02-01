@@ -51,10 +51,9 @@ class bitrix_module extends CModule
 			if (in_array($page, ['.', '..', 'menu.php'])) {
 				continue;
 			}
-			symlink(
-				$dir.'/'.$page,
-				$this->getBitrixAdminPageName($page)
-			);
+            $filePath = $dir.'/'.$page;
+            // CopyDirFiles($filePath, $this->getBitrixAdminPageName($page), true, true, false);
+			symlink($filePath, $this->getBitrixAdminPageName($page));
 		}
 	}
 
@@ -62,6 +61,7 @@ class bitrix_module extends CModule
 	{
 		$dir = __DIR__.'/../components';
 		if (file_exists($dir)) {
+            // CopyDirFiles($dir, $this->getBitrixComponentsDir(), true, true, false);
 			symlink($dir, $this->getBitrixComponentsDir());
 		}
 	}
@@ -82,6 +82,9 @@ class bitrix_module extends CModule
     {
         $dir = __DIR__.'/public';
         if (file_exists($dir) && is_dir($dir)) {
+            $rewrite = true;
+            $recursive = true;
+            $deleteAfterCopy = false;
             $files = scandir($dir);
             foreach ($files as $file) {
                 if (in_array($file, ['.', '..'])) {
@@ -90,19 +93,8 @@ class bitrix_module extends CModule
 
                 $sourcePath = $dir.'/'.$file;
                 $targetPath = $_SERVER['DOCUMENT_ROOT'].'/'.$file;
-                if (file_exists($targetPath)) {
-                    if (is_dir($targetPath)) {
-                        // pass
-                    }
-                    else {
-                        continue;
-                    }
-                }
-                else if (!file_exists($targetPath)) {
-                    mkdir($targetPath, 0755, true);
-                }
 
-                CopyDirFiles($sourcePath, $targetPath, false, true, false);
+                CopyDirFiles($sourcePath, $targetPath, $rewrite, $recursive, $deleteAfterCopy);
             }
         }
     }

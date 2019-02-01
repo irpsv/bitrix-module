@@ -17,9 +17,12 @@ if ($seo['SECTION_META_KEYWORDS']) {
 }
 
 $rowName = $row['NAME'] ?: null;
+if ($rowName) {
+	$APPLICATION->SetTitle($rowName);
+}
+
 $title = $seo['SECTION_META_TITLE'] ?? $rowName;
 if ($title) {
-    $APPLICATION->SetTitle($title);
     $APPLICATION->SetPageProperty('title', $title);
     if ($rowName) {
         $APPLICATION->AddChainItem($rowName);

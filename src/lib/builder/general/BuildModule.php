@@ -43,10 +43,12 @@ class BuildModule
 		}
 
 		$installPhpCodes = [];
+		$unInstallPhpCodes = [];
 		$iblockFilesDir = $this->savedDir.'/iblock/';
         foreach ($this->iblockTypes as $iblockTypeId) {
             $buildIblock = new \build_module\iblock\AllIblockEntitiesBuilder($iblockTypeId);
             $installPhpCodes[] = $buildIblock->getCreateCode();
+			$unInstallPhpCodes[] = $buildIblock->getCreateCode();
 
 			$iblockCodes = $this->getIblockCodes($iblockTypeId);
 			foreach ($iblockCodes as $iblockCode) {
@@ -60,6 +62,10 @@ class BuildModule
 		$savedInstallFile = rtrim($this->savedDir, '/').'/do-install.php';
         $installPhpCodesStr = join("\n\n", $installPhpCodes);
         file_put_contents($savedInstallFile, $installPhpCodesStr);
+
+		$savedUnInstallFile = rtrim($this->savedDir, '/').'/do-uninstall.php';
+        $unInstallPhpCodesStr = join("\n\n", $unInstallPhpCodes);
+        file_put_contents($savedUnInstallFile, $unInstallPhpCodesStr);
 
         return true;
     }

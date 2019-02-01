@@ -55,21 +55,6 @@ class IblockTypeBuilder extends BaseMapperBuilder
 		return $this->getCreateCodeByOldClass('\CIBlockType', $row);
 	}
 
-	// public function getCreateIblockTypeLangCode()
-	// {
-	// 	$codes = [];
-	// 	$rows = \Bitrix\Iblock\TypeLanguageTable::getList([
-	// 		'filter' => [
-	// 			'=IBLOCK_TYPE_ID' => $this->typeId,
-	// 		],
-	// 	])->fetchAll();
-	// 	foreach ($rows as $row) {
-	// 		unset($row['ID']);
-	// 		$codes[] = $this->getCreateCodeByMapper('\Bitrix\Iblock\TypeLanguageTable', $row);
-	// 	}
-	// 	return join("\n\n", $codes);
-	// }
-
 	public function getDeleteCode()
 	{
 		return trim("\\CIBlockType::Delete('{$this->typeId}');");
