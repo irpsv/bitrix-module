@@ -113,4 +113,38 @@ class Field
 		$ret['PLACEHOLDER'] = $this->placeholder;
 		return $ret;
 	}
+	
+	public function fromArray(array $row)
+	{
+		if ($row['NAME']) {
+			$this->name = $row['NAME'];
+		}
+		if ($row['NAME']) {
+			$this->hint = $row['HINT'];
+		}
+		if ($row['TYPE']) {
+			$this->type = $row['TYPE'];
+		}
+		if ($row['ERROR']) {
+			$this->error = $row['ERROR'];
+		}
+		if ($row['LABEL']) {
+			$this->label = $row['LABEL'];
+		}
+		if ($row['VALUES']) {
+			$this->values = $row['VALUES'];
+		}
+		if ($row['VALUE']) {
+			$this->setValue($row['VALUE']);
+		}
+		if ($row['SUCCESS']) {
+			$this->success = $row['SUCCESS'];
+		}
+		if ($row['MULTIPLE']) {
+			$this->multiple = $row['MULTIPLE'];
+		}
+		if ($row['PLACEHOLDER']) {
+			$this->placeholder = $row['PLACEHOLDER'];
+		}
+	}
 }

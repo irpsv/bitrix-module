@@ -1,25 +1,26 @@
 <?php
 
-include_once __DIR__.'/functions.php';
-
-use bitrix_module\components\classes\templates;
+// include_once __DIR__.'/functions.php';
+//
+// use arteast_actions\components\classes\templates;
+//
+// $title = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, 'NAME');
+// $preview = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, '{this.PROPERTY_TITLE}');
 
 // проброс значений в component_epilog
 $templateData['HTML_ID'] = $arResult['HTML_ID'];
 $templateData['BUTTONS'] = $arResult['BUTTONS'];
 
-$row = $arResult['ROW'];
-$fields = $arParams['FIELDS'] ?? [
-	'PICTURE' => 'PREVIEW_PICTURE',
-	'PREVIEW' => 'PREVIEW_TEXT',
-	'LINK' => 'DETAIL_PAGE_URL',
-	'TITLE' => 'NAME',
+$row		= $arResult['ROW'];
+$picture	= $row['PREVIEW_PICTURE'];
+$title		= $row['NAME'];
+$preview	= $row['PREVIEW_TEXT'];
+$link		= $row['DETAIL_PAGE_URL'];
+$buttons = [
+	[
+		'TEXT' => 'Подробнее',
+	],
 ];
-$picture = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['PICTURE']);
-$title = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['TITLE']);
-$preview = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['PREVIEW']);
-$link = templates\componentIblockElementViewBootstrapCardGetFieldValue($row, $fields['LINK']);;
-$buttons = $fields['BUTTONS'] ?? [];
 
 $styleClasses = $arParams['CSS_CLASS'] ?? '';
 

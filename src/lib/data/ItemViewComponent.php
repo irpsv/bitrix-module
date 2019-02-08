@@ -59,7 +59,7 @@ abstract class ItemViewComponent extends \CBitrixComponent
     {
 		\CModule::includeModule('iblock');
 		
-        $cacheTime = $this->arParams['CACHE_TIME'] ?? 3600;
+        $cacheTime = $this->arParams['CACHE_TIME'] ?? 360000000;
         $cacheAdditionalId = null;
         $cachePath = preg_replace('/[^a-z0-9]/i', '_', get_class($this));
 

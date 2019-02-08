@@ -50,9 +50,9 @@ $styleClasses = $arParams['CSS_CLASS'] ?? '';
 		echo "<div class='card-body'>";
 		if ($title) {
 			if ($link) {
-				echo "<a href='{$link}'>
-				<h5 class='card-title'>{$title}</h5>
-				</a>";
+				echo "<h5 class='card-title'>
+				<a href='{$link}'>{$title}</a>
+				</h5>";
 			}
 			else {
 				echo "<h5 class='card-title'>{$title}</h5>";

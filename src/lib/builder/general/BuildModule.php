@@ -46,14 +46,14 @@ class BuildModule
 		$unInstallPhpCodes = [];
 		$iblockFilesDir = $this->savedDir.'/iblock/';
         foreach ($this->iblockTypes as $iblockTypeId) {
-            $buildIblock = new \build_module\iblock\AllIblockEntitiesBuilder($iblockTypeId);
+            $buildIblock = new \bitrix_module\builder\iblock\AllIblockEntitiesBuilder($iblockTypeId);
             $installPhpCodes[] = $buildIblock->getCreateCode();
-			$unInstallPhpCodes[] = $buildIblock->getCreateCode();
+			$unInstallPhpCodes[] = $buildIblock->getDeleteCode();
 
 			$iblockCodes = $this->getIblockCodes($iblockTypeId);
 			foreach ($iblockCodes as $iblockCode) {
                 $xmlFileName = "{$iblockCode}.xml";
-                $buildFiles = new \build_module\iblock\IblockExportXmlBuilder($iblockCode, $iblockFilesDir, $xmlFileName);
+                $buildFiles = new \bitrix_module\builder\iblock\IblockExportXmlBuilder($iblockCode, $iblockFilesDir, $xmlFileName);
 				$buildFiles->build();
                 $installPhpCodes[] = $buildFiles->getCreateCode();
             }

@@ -20,6 +20,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 				<div class="iblockSectionList__filter">
 					<?php
 					$filterParams = [
+						'CACHE_TYPE' => 'N',
 						'FILTER_REQUEST' => $filterRequest,
 					];
 					$filterTemplate = $arParams['FILTER_TEMPLATE'] ?? 'bootstrap';
@@ -39,6 +40,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 						<div class="iblockSectionList__sorter">
 							<?php
 							$sorterParams = [
+								'CACHE_TYPE' => 'N',
 								'SORTER_REQUEST' => $sorterRequest,
 							];
 							$sorterTemplate = $arParams['SORTER_TEMPLATE'] ?? 'bootstrap';
@@ -87,7 +89,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 								$itemParams = array_merge(
 									[
 										'ID' => $item['ID'],
-										'CACHE_TYPE' => 'Y',
+										'CACHE_TYPE' => 'N',
 									],
 									$itemDefaultParams
 								);
@@ -103,6 +105,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 						<div class="iblockSectionList__pager">
 							<?php
 							$pagerParams = [
+								'CACHE_TYPE' => 'N',
 								'PAGER_REQUEST' => $pagerRequest,
 							];
 							$pagerTemplate = $arParams['PAGER_TEMPLATE'] ?? 'bootstrap';

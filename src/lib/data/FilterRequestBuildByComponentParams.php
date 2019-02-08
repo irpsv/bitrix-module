@@ -1,6 +1,6 @@
 <?php
 
-namespace bitrix_module\data;
+namespace arteast_fitness\data;
 
 class FilterRequestBuildByComponentParams
 {
@@ -30,42 +30,61 @@ class FilterRequestBuildByComponentParams
 			// pass
 		}
 
-		$iblock = $this->arParams['IBLOCK'];
+		$filter = null;
+		$iblock = $this->arParams['IBLOCK'] ?? null;
 		$active = (array) ($this->arParams['ACTIVE'] ?? []);
+		$fields = $this->arParams['FIELDS'] ?? array_keys($active);
 
-		if ($iblock) {
-			if (!$iblock['ID'] && $iblock['CODE']) {
-				\CModule::includeModule('iblock');
-				$iblockRow = \CIBlock::getList([], [
-					'CODE' => $iblock['CODE'],
-				])->fetch();
-				if ($iblockRow) {
-					$iblock['ID'] = $iblockRow['ID'];
-				}
-				unset($iblockRow);
-			}
-			$filterRequest = FilterRequestBuildByIblockParams::runStatic(
-				$iblock['ID'],
+		if ($iblock && $fields) {
+			$filter = FilterRequestBuildByIblockParams::runStatic(
+				$this->getIblockId($iblock),
 				$iblock['FIELDS']
-			);
-		}
-		else {
-			$fields = $this->arParams['FIELDS'];
-			if (!$fields) {
-				if ($active) {
-					$fields = array_keys($active);
+			)->filter;
+			foreach ($fields as $field) {
+				if (is_array($field)) {
+					// pass
 				}
 				else {
-					throw new \Exception("Параметр 'FIELDS' обязателен");
+					$field = [
+						'NAME' => (string) $field,
+					];
+				}
+
+				$fieldName = $field['NAME'] ?? null;
+				$existsField = $fieldName ? $filter->getField($fieldName) : null;
+				if ($existsField) {
+					$config = $existsField->toArray();
+					if ($field instanceof FilterField) {
+						$config = array_merge($config, $field->toArray());
+					}
+					else {
+						$config = array_merge($config, $field);
+					}
+					$existsField->fromArray($config);
+				}
+				else {
+					$filter->addField($field);
 				}
 			}
-
+		}
+		else if ($iblock) {
+			$filter = FilterRequestBuildByIblockParams::runStatic(
+				$this->getIblockId($iblock),
+				$iblock['FIELDS']
+			)->filter;
+		}
+		else if ($fields) {
 			$filter = new Filter();
 			foreach ($fields as $field) {
 				$filter->addField($field);
 			}
+		}
 
+		if ($filter) {
 			$filterRequest = new FilterRequest($filter);
+		}
+		else {
+			throw new \Exception("Параметр 'FIELDS' или 'IBLOCK' обязательны");
 		}
 
 		foreach ($active as $name => $value) {
@@ -75,5 +94,23 @@ class FilterRequestBuildByComponentParams
 		$filterRequest->queryName = (string) ($this->arParams['REQUEST_NAME'] ?? 'f');
 		$filterRequest->isOnlyData = isset($this->arParams['ONLY_DATA']) && $this->arParams['ONLY_DATA'] !== 'N';
 		return $filterRequest;
+	}
+
+	protected function getIblockId(array $iblock)
+	{
+		if (isset($iblock['ID'])) {
+			return (int) $iblock['ID'];
+		}
+		else if (isset($iblock['CODE'])) {
+			\CModule::includeModule('iblock');
+			$row = \CIBlock::getList([], [
+				'CODE' => $iblock['CODE'],
+			])->fetch();
+			if ($row) {
+				return (int) $row['ID'];
+			}
+		}
+
+		throw new \Exception("Параметры 'IBLOCK.ID' или 'IBLOCK.CODE' должны быть заполены");
 	}
 }
