@@ -20,9 +20,6 @@ else if (count($buttons) > 1) {
 	unset($button);
 }
 
-$groupButtonsCss = $formRowCssClass ?: "form-group";
-
-echo "<div class='{$groupButtonsCss}'>";
 foreach ($buttons as $button) {
 	if ($formRowCssClass && !$button['GROUP_CSS_CLASS']) {
 		$button['GROUP_CSS_CLASS'] = $formRowCssClass;
@@ -32,4 +29,3 @@ foreach ($buttons as $button) {
 	}
 	$APPLICATION->IncludeComponent("bitrix.module:input.view", "bootstrap", $button, $component);
 }
-echo "</div>";
