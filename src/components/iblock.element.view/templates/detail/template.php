@@ -12,6 +12,8 @@ $templateData['HTML_ID'] = $arResult['HTML_ID'];
 $templateData['BUTTONS'] = $arResult['BUTTONS'];
 
 $row = $arResult['ROW'];
+$props = $arResult['PROPS'];
+
 $title = $row['NAME'];
 $image = $row['DETAIL_PICTURE'];
 $content = $row['DETAIL_TEXT'];

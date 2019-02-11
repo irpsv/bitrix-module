@@ -63,3 +63,32 @@ if ($row['PREVIEW_PICTURE']) {
 }
 
 $arResult['ROW'] = $row;
+
+//
+// PROPS
+//
+$props = [];
+$propsCodes = [
+    'code',
+];
+$propResult = \CIBlockElement::getProperty(
+    $row['IBLOCK_ID'],
+    $row['ID'],
+    [],
+    [
+        'CODE' => $propsCodes ?: -1,
+    ]
+);
+while ($propRow = $propResult->fetch()) {
+    $code = $propRow['CODE'];
+    $value = $propRow['VALUE'];
+    if ($propRow['MULTIPLE'] === 'Y') {
+        $value = (array) $value;
+        if (isset($props[$code])) {
+            array_push($props[$code], ...$value);
+            continue;
+        }
+    }
+    $props[$code] = $value;
+}
+$arResult['PROPS'] = $props;
