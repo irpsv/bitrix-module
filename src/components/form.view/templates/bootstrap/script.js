@@ -57,8 +57,9 @@ window.FormView = function(config) {
 				}
 			},
 			error: function(e) {
+				console.log(e);
 				btn.prop("disabled", false)
-				alertError(e.responseText)
+				alertError(e.status +" "+ e.statusText)
 			}
 		})
 		return false;

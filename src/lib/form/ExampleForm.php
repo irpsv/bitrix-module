@@ -19,7 +19,7 @@ class ExampleForm extends BaseForm
                 'required',
             ],
             'passwordRepeat' => [
-                function($value, $name, $model) {
+                function($value, $model, $name) {
                     if ($model->password !== $model->passwordRepeat) {
                         $model->addError($name, "'password' и 'passwordRepeat' должны совпадать");
                         return false;
@@ -28,7 +28,7 @@ class ExampleForm extends BaseForm
                 },
             ],
 			'birthday' => [
-				function($value, $name, $model) {
+				function($value, $model, $name) {
 					$format = "d.m.Y";
 					if ($value && \DateTime::createFromFormat($format, $value) === false) {
 						$model->addError($name, "Поле '{$name}' должно соответствовать формату: '{$format}'");

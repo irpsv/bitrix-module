@@ -113,7 +113,7 @@ abstract class BaseForm
             $this->validateEmail($name, $value);
         }
         else if (is_callable($validator)) {
-            $validator($value, $name, $this);
+            $validator($value, $this, $name);
         }
         else {
             throw new \Exception("Указанный валидатор не найден");
