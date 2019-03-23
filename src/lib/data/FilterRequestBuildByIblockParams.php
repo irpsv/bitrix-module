@@ -30,12 +30,28 @@ class FilterRequestBuildByIblockParams
 		}
 
 		$filter = new Filter();
-		foreach ($this->fields as $fieldName) {
-			if (stripos($fieldName, 'PROPERTY_') === 0) {
-				$item = $this->processProperty($fieldName);
+		foreach ($this->fields as $field) {
+			if (is_array($field)) {
+				$fieldName = $field['NAME'];
 			}
 			else {
-				$item = $this->processField($fieldName);
+				$fieldName = (string) $field;
+			}
+
+			if ($fieldName) {
+				if (stripos($fieldName, 'PROPERTY_') === 0) {
+					$item = $this->processProperty($fieldName);
+				}
+				else {
+					$item = $this->processField($fieldName);
+				}
+
+				if (is_array($field)) {
+					$item = array_merge($item, $field);
+				}
+			}
+			else {
+				$item = $field;
 			}
 
 			$item = array_filter($item);

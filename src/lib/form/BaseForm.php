@@ -22,6 +22,32 @@ abstract class BaseForm
         return $isLoad;
     }
 
+	public static function getFieldsByComponent()
+	{
+		$ret = [];
+		$form = new static();
+		$values = $form->getFieldValues();
+		$validators = $form->getFieldValidators();
+
+		foreach ($values as $name => $value) {
+			$ret[$name] = [
+				'TYPE' => 'text',
+				'NAME' => $name,
+				'VALUE' => $value,
+			];
+			$fieldValidators = $validators[$name] ?? [];
+			if (in_array("email", $fieldValidators)) {
+				$ret[$name]['ATTRIBUTES'] = [
+					'data-validator' => 'email',
+				];
+			}
+			if (in_array("required", $fieldValidators)) {
+				$ret[$name]['REQUIRED'] = 'Y';
+			}
+		}
+		return $ret;
+	}
+
     public function getFieldNames()
     {
         if ($this->fieldNames === null) {
@@ -87,7 +113,7 @@ abstract class BaseForm
             $this->validateEmail($name, $value);
         }
         else if (is_callable($validator)) {
-            $validator($value, $name, $this);
+            $validator($value, $this, $name);
         }
         else {
             throw new \Exception("Указанный валидатор не найден");
@@ -103,7 +129,7 @@ abstract class BaseForm
 
     protected function validateEmail($name, $value)
     {
-        if (!$value || !check_email($value)) {
+        if ($value && !check_email($value)) {
             $this->addError($name, "Поле '{$name}' не является email адресом");
         }
     }
