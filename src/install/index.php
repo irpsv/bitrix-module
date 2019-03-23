@@ -6,8 +6,8 @@ class bitrix_module extends CModule
 
     public $MODULE_ID = "bitrix.module";
     public $MODULE_NAME = "bitrix_module_name";
-	public $MODULE_VERSION = '1.0';
-  	public $MODULE_VERSION_DATE = '2018-12-12';
+	public $MODULE_VERSION = '1.0.0';
+  	public $MODULE_VERSION_DATE = 'bitrix_module_date';
 
     public function __construct()
     {

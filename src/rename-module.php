@@ -3,6 +3,8 @@
 $names = [
     // название модуля (используется в описании модуля и компонентов)
     'bitrix_module_name' => '',
+    // дата модуля
+    'bitrix_module_date' => date('Y-m-d'),
     // namespace модуля
     'bitrix_module' => '',
     // название модуля в битрикс
