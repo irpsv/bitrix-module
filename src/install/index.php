@@ -2,6 +2,8 @@
 
 class bitrix_module extends CModule
 {
+	private $PRODUCTION = false;
+
     public $MODULE_ID = "bitrix.module";
     public $MODULE_NAME = "bitrix_module_name";
 	public $MODULE_VERSION = '1.0';
@@ -20,10 +22,11 @@ class bitrix_module extends CModule
             include $file;
         }
 
+		$this->addUrlRewriteRules();
         $this->copyInstallFiles();
-        $this->addUrlRewriteRules();
-		$this->addSymlinkAdmin();
-		$this->addSymlinkComponents();
+		$this->copyAdminFiles();
+		$this->copyComponentsFiles();
+
         RegisterModule($this->MODULE_ID);
     }
 
@@ -34,12 +37,13 @@ class bitrix_module extends CModule
             include $file;
         }
 
-		$this->removeSymlinkAdmin();
-		$this->removeSymlinkComponents();
+		$this->removeAdminFiles();
+		$this->removeComponentsFiles();
+
         UnRegisterModule($this->MODULE_ID);
     }
 
-	public function addSymlinkAdmin()
+	public function copyAdminFiles()
 	{
 		$dir = __DIR__.'/../admin';
 		if (!file_exists($dir)) {
@@ -52,17 +56,31 @@ class bitrix_module extends CModule
 				continue;
 			}
             $filePath = $dir.'/'.$page;
-            // CopyDirFiles($filePath, $this->getBitrixAdminPageName($page), true, true, false);
-			symlink($filePath, $this->getBitrixAdminPageName($page));
+			if ($this->PRODUCTION) {
+				$rewrite = true;
+				$recursive = true;
+				$deleteAfterCopy = false;
+				CopyDirFiles($filePath, $this->getBitrixAdminPageName($page), $rewrite, $recursive, $deleteAfterCopy);
+			}
+			else {
+				symlink($filePath, $this->getBitrixAdminPageName($page));
+			}
 		}
 	}
 
-	public function addSymlinkComponents()
+	public function copyComponentsFiles()
 	{
 		$dir = __DIR__.'/../components';
 		if (file_exists($dir)) {
-            // CopyDirFiles($dir, $this->getBitrixComponentsDir(), true, true, false);
-			symlink($dir, $this->getBitrixComponentsDir());
+			if ($this->PRODUCTION) {
+				$rewrite = true;
+				$recursive = true;
+				$deleteAfterCopy = false;
+				CopyDirFiles($dir, $this->getBitrixComponentsDir(), $rewrite, $recursive, $deleteAfterCopy);
+			}
+			else {
+				symlink($dir, $this->getBitrixComponentsDir());
+			}
 		}
 	}
 
@@ -99,7 +117,7 @@ class bitrix_module extends CModule
         }
     }
 
-	public function removeSymlinkAdmin()
+	public function removeAdminFiles()
 	{
 		$dir = __DIR__.'/../admin';
 		if (!file_exists($dir)) {
@@ -115,11 +133,38 @@ class bitrix_module extends CModule
 		}
 	}
 
-	public function removeSymlinkComponents()
+	public static function unlinkRecursive(string $path)
+	{
+		if (!file_exists($path)) {
+			return;
+		}
+		else if (is_dir($path)) {
+			$childs = scandir($path);
+			$exclude = ['.', '..'];
+			foreach ($childs as $child) {
+				if (in_array($child, $exclude)) {
+					continue;
+				}
+				$childPath = $path.'/'.$child;
+				self::unlinkRecursive($childPath);
+			}
+			rmdir($path);
+		}
+		else {
+			unlink($path);
+		}
+	}
+
+	public function removeComponentsFiles()
 	{
 		$dir = $this->getBitrixComponentsDir();
 		if (file_exists($dir)) {
-			unlink($dir);
+			if ($this->PRODUCTION) {
+				self::unlinkRecursive($dir);
+			}
+			else {
+				unlink($dir);
+			}
 		}
 	}
 
