@@ -12,8 +12,20 @@ class IblockSectionList extends DataSetComponent
 {
 	public function getIblockParams()
 	{
-		$iblockParams = $this->arParams['IBLOCK'];
-		if (empty($iblockParams['FILTER'])) {
+		$iblockCode = (string) ($this->arParams['IBLOCK_CODE'] ?? null);
+		$iblockParams = (array) ($this->arParams['IBLOCK'] ?? []);
+		if ($iblockCode) {
+			$iblockParams['FILTER'] = [
+				'ACTIVE' => 'Y',
+				'GLOBAL_ACTIVE' => 'Y',
+				'IBLOCK_CODE' => $iblockCode,
+				'CHECK_PERMISSIONS' => 'N',
+			];
+		}
+		else if (isset($iblockParams['FILTER'])) {
+			// pass
+		}
+		else {
 			throw new \Exception("Параметр `IBLOCK.FILTER` обязателен для заполнения");
 		}
 		return [

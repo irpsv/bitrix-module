@@ -9,9 +9,13 @@ $names = [
     'bitrix_module' => '',
     // название модуля в битрикс
     'bitrix.module' => '',
+	// именя CSS классов
+	'bitrixModuleCss' => '',
 ];
 $exts = [
+	"js",
     "php",
+	"css",
 ];
 $exclude = [
     ".",

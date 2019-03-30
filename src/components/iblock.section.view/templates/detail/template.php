@@ -2,40 +2,50 @@
 
 // проброс значений в component_epilog
 $templateData['ROW'] = $arResult['ROW'];
-$templateData['SECTION_TREE'] = $arResult['SECTION_TREE'];
-$templateData['SEO_VALUES'] = $arResult['SEO_VALUES'];
-$templateData['CANONICAL'] = $arResult['CANONICAL'];
-$templateData['OPEN_GRAPH_TITLE'] = $arResult['OPEN_GRAPH_TITLE'];
-$templateData['OPEN_GRAPH_DESCRIPTION'] = $arResult['OPEN_GRAPH_DESCRIPTION'];
-$templateData['OPEN_GRAPH_IMAGE'] = $arResult['OPEN_GRAPH_IMAGE'];
 $templateData['HTML_ID'] = $arResult['HTML_ID'];
 $templateData['BUTTONS'] = $arResult['BUTTONS'];
+$templateData['CANONICAL'] = $arResult['CANONICAL'];
+$templateData['SEO_VALUES'] = $arResult['SEO_VALUES'];
+$templateData['SECTION_TREE'] = $arResult['SECTION_TREE'];
 
 $row = $arResult['ROW'];
+
 $title = $row['NAME'];
-$content = $row['DESCRIPTION'];
+$desc = $row['DESCRIPTION'];
+
+$styleClasses = $arParams['CSS_CLASS'] ?? '';
 
 ?>
-<div class="modelSectionView modelSectionView_detail">
-    <h1 class="page-title">
-		<?= $title ?>
-	</h1>
-    <div class="modelSectionView__content">
-        <?= $content ?>
-    </div>
-    <div class="modelSectionView__childs">
-        <?php
-        $APPLICATION->IncludeComponent("bitrix.module:iblock.element.list", "grid", [
-            'IBLOCK' => [
-                'FILTER' => [
-                    'IBLOCK_ID' => $row['IBLOCK_ID'],
-                    'IBLOCK_SECTION_ID' => $row['ID'],
-                    'ACTIVE' => 'Y',
-                    'ACTIVE_DATE' => 'Y',
-                    'CHECK_PERMISSIONS' => 'N',
-                ],
-            ],
-        ], $component);
-        ?>
-    </div>
+<div id="<?= $arResult['HTML_ID'] ?>" class="bitrixModuleCssIblockSectionViewDetail <?= $styleClasses ?>">
+	<div class="bitrixModuleCssIblockSectionViewDetail__childs">
+		<?php
+		$elementParams = [
+			'CACHE_TYPE' => 'N',
+			'IBLOCK' => [
+				'FILTER' => [
+					'ACTIVE' => 'Y',
+					'ACTIVE_DATE' => 'Y',
+					'IBLOCK_ID' => $row['IBLOCK_ID'],
+					'SECTION_ID' => $row['ID'],
+					'CHECK_PERMISSIONS' => 'N',
+				],
+				'ORDER' => [
+					'ACTIVE_FROM' => 'DESC',
+				],
+			],
+			'COLS' => '1',
+			'ITEM_TEMPLATE' => 'list-item',
+			'PAGER_TEMPLATE' => 'bootstrap',
+			'PAGER_PARAMS' => [
+				'REQUEST_NAME' => 'p',
+				'PAGE_SIZE' => 3,
+			],
+		];
+		$elementParams = array_merge(
+			$elementParams,
+			(array) ($arParams['ELEMENT_LIST_PARAMS'] ?? [])
+		);
+		$APPLICATION->IncludeComponent("bitrix.module:iblock.element.list", "grid", $elementParams, $component);
+		?>
+	</div>
 </div>

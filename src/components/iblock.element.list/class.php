@@ -14,13 +14,16 @@ class IblockElementList extends DataSetComponent
 	{
 		$iblockCode = (string) ($this->arParams['IBLOCK_CODE'] ?? null);
 		$iblockParams = (array) ($this->arParams['IBLOCK'] ?? []);
-		if ($iblockCode && empty($iblockParams['FILTER'])) {
+		if ($iblockCode) {
 			$iblockParams['FILTER'] = [
 				'ACTIVE' => 'Y',
 				'ACTIVE_DATE' => 'Y',
 				'IBLOCK_CODE' => $iblockCode,
 				'CHECK_PERMISSIONS' => 'N',
 			];
+		}
+		else if (isset($iblockParams['FILTER'])) {
+			// pass
 		}
 		else {
 			throw new \Exception("Параметр `IBLOCK.FILTER` обязателен для заполнения");

@@ -2,39 +2,6 @@
 
 global $APPLICATION;
 
-$sectionTree = $templateData['SECTION_TREE'] ?? [];
-foreach ($sectionTree as $section) {
-    $APPLICATION->AddChainItem($section['NAME'], $section['SECTION_PAGE_URL']);
-}
-
-$row = $templateData['ROW'];
-$seo = $templateData['SEO_VALUES'];
-if ($seo['SECTION_META_DESCRIPTION']) {
-    $APPLICATION->SetPageProperty('description', $seo['SECTION_META_DESCRIPTION']);
-}
-if ($seo['SECTION_META_KEYWORDS']) {
-    $APPLICATION->SetPageProperty('keywords', $seo['SECTION_META_KEYWORDS']);
-}
-
-$rowName = $row['NAME'] ?: null;
-if ($rowName) {
-	$APPLICATION->SetTitle($rowName);
-}
-
-$title = $seo['SECTION_META_TITLE'] ?? $rowName;
-if ($title) {
-    $APPLICATION->SetPageProperty('title', $title);
-}
-
-//
-// CANONICAL
-//
-if ($templateData['CANONICAL']) {
-    $value = htmlspecialchars($templateData['CANONICAL']);
-    $APPLICATION->AddHeadString("<link rel='canonical' href='{$value}'/>");
-    $APPLICATION->AddHeadString("<meta property='og:url' content='{$value}'/>");
-}
-
 $areaId = $templateData['HTML_ID'] ?? null;
 $buttons = $templateData['BUTTONS'] ?? null;
 

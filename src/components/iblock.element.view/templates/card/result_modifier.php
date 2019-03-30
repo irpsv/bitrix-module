@@ -44,16 +44,30 @@ if ($row['PREVIEW_PICTURE']) {
 
     $row['PREVIEW_PICTURE'] = \CFile::getFileArray($row['PREVIEW_PICTURE']);
 	if ($sizes) {
-        if ($sizes['width'] > $row['PREVIEW_PICTURE']['WIDTH']) {
-            $k = $row['PREVIEW_PICTURE']['WIDTH'] / $sizes['width'];
-            $sizes['width'] *= $k;
-            $sizes['height'] *= $k;
+        $originalWidth = $row['PREVIEW_PICTURE']['WIDTH'];
+        $originalHeight = $row['PREVIEW_PICTURE']['HEIGHT'];
+
+        $isWidthGreater = $sizes['width'] > $originalWidth;
+        $isHeightGreater = $sizes['height'] > $originalHeight;
+
+        $k = 1;
+        if ($isWidthGreater && $isHeightGreater) {
+            if ($originalHeight > $originalWidth) {
+                $k = $originalWidth / $sizes['width'];
+            }
+            else {
+                $k = $originalHeight / $sizes['height'];
+            }
         }
-        else if ($sizes['height'] > $row['PREVIEW_PICTURE']['HEIGHT']) {
-            $k = $row['PREVIEW_PICTURE']['HEIGHT'] / $sizes['height'];
-            $sizes['width'] *= $k;
-            $sizes['height'] *= $k;
+        else if ($isWidthGreater) {
+            $k = $originalWidth / $sizes['width'];
         }
+        else if ($isHeightGreater) {
+            $k = $originalHeight / $sizes['height'];
+        }
+        $sizes['width'] *= $k;
+        $sizes['height'] *= $k;
+
 		$row['PREVIEW_PICTURE'] = \CFile::ResizeImageGet($row['PREVIEW_PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);
 		$row['PREVIEW_PICTURE']['SRC'] = $row['PREVIEW_PICTURE']['src'];
 	}
@@ -69,26 +83,28 @@ $arResult['ROW'] = $row;
 //
 $props = [];
 $propsCodes = [
-    'code',
+	// 'code',
 ];
-$propResult = \CIBlockElement::getProperty(
-    $row['IBLOCK_ID'],
-    $row['ID'],
-    [],
-    [
-        'CODE' => $propsCodes ?: -1,
-    ]
-);
-while ($propRow = $propResult->fetch()) {
-    $code = $propRow['CODE'];
-    $value = $propRow['VALUE'];
-    if ($propRow['MULTIPLE'] === 'Y') {
-        $value = (array) $value;
-        if (isset($props[$code])) {
-            array_push($props[$code], ...$value);
-            continue;
-        }
-    }
-    $props[$code] = $value;
+if ($propsCodes) {
+	$propResult = \CIBlockElement::getProperty(
+		$row['IBLOCK_ID'],
+		$row['ID'],
+		[],
+		[
+			'CODE' => $propsCodes,
+		]
+	);
+	while ($propRow = $propResult->fetch()) {
+		$code = $propRow['CODE'];
+		$value = $propRow['VALUE'];
+		if ($propRow['MULTIPLE'] === 'Y') {
+			$value = (array) $value;
+			if (isset($props[$code])) {
+				array_push($props[$code], ...$value);
+				continue;
+			}
+		}
+		$props[$code] = $value;
+	}
 }
 $arResult['PROPS'] = $props;

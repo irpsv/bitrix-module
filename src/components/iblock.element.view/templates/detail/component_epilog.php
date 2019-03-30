@@ -38,24 +38,11 @@ if ($title) {
 }
 
 //
-// OPEN GRAPH & CANONICAL
+// CANONICAL
 //
 if ($templateData['CANONICAL']) {
-    $value = htmlspecialchars($templateData['CANONICAL']);
+    $value = htmlspecialchars($templateData['CANONICAL'], ENT_QUOTES | ENT_HTML401);
     $APPLICATION->AddHeadString("<link rel='canonical' href='{$value}'/>");
-    $APPLICATION->AddHeadString("<meta property='og:url' content='{$value}'/>");
-}
-if ($templateData['OPEN_GRAPH_TITLE']) {
-    $value = htmlspecialchars($templateData['OPEN_GRAPH_TITLE']);
-    $APPLICATION->AddHeadString("<meta property='og:title' content='{$value}'/>");
-}
-if ($templateData['OPEN_GRAPH_DESCRIPTION']) {
-    $value = htmlspecialchars($templateData['OPEN_GRAPH_DESCRIPTION']);
-    $APPLICATION->AddHeadString("<meta property='og:description' content='{$value}'/>");
-}
-if ($templateData['OPEN_GRAPH_IMAGE']) {
-    $value = htmlspecialchars($templateData['OPEN_GRAPH_IMAGE']);
-    $APPLICATION->AddHeadString("<meta property='og:image' content='{$value}'/>");
 }
 
 $areaId = $templateData['HTML_ID'] ?? null;

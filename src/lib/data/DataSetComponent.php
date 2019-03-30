@@ -55,22 +55,45 @@ abstract class DataSetComponent extends \CBitrixComponent
 		$cache->endDataCache();
 	}
 
+	private function getInternalLastUpdate($cacheTime, $cacheAdditionalId, $cachePath)
+	{
+		$cache = \Bitrix\Main\Data\Cache::createInstance();
+		$cacheId = $this->getCacheID($cacheAdditionalId).'_lastUpdateReal';
+
+		if ($cache->initCache($cacheTime, $cacheId, $cachePath)) {
+			$lastUpdate = $cache->getVars()['lastUpdate'] ?? null;
+		}
+		else if ($cache->startDataCache($cacheTime, $cacheId, $cachePath)) {
+			$lastUpdate = $this->getLastUpdate();
+			$cache->endDataCache([
+				'lastUpdate' => $lastUpdate,
+			]);
+		}
+		return $lastUpdate;
+	}
+
 	public function executeComponent()
 	{
-		$cacheTime = $this->arParams['CACHE_TIME'] ?? 360000000;
-		$cacheAdditionalId = null;
-		$cachePath = preg_replace('/[^a-z0-9]/i', '_', get_class($this));
-
-		$realLastUpdate = $this->getLastUpdate();
-		$cacheLastUpdate = $this->getCacheLastUpdate($cacheTime, $cacheAdditionalId, $cachePath);
-		if ($realLastUpdate !== $cacheLastUpdate) {
-			$this->clearResultCache($cacheAdditionalId, $cachePath);
-		}
-
-		if ($this->startResultCache($cacheTime, $cacheAdditionalId, $cachePath)) {
+		$isCaching = $this->arParams['CACHE_TYPE'] !== 'N';
+		if ($isCaching === false) {
 			$this->run();
-			$this->endResultCache();
-			$this->setCacheLastUpdate($cacheTime, $cacheAdditionalId, $cachePath, $realLastUpdate);
+		}
+		else {
+			$cacheTime = $this->arParams['CACHE_TIME'] ?? 360000000;
+			$cacheAdditionalId = null;
+			$cachePath = preg_replace('/[^a-z0-9]/i', '_', get_class($this));
+
+			$realLastUpdate = $this->getInternalLastUpdate(60, $cacheAdditionalId, $cachePath);
+			$cacheLastUpdate = $this->getCacheLastUpdate($cacheTime, $cacheAdditionalId, $cachePath);
+			if ($realLastUpdate !== $cacheLastUpdate) {
+				$this->clearResultCache($cacheAdditionalId, $cachePath);
+			}
+
+			if ($this->startResultCache($cacheTime, $cacheAdditionalId, $cachePath)) {
+				$this->run();
+				$this->endResultCache();
+				$this->setCacheLastUpdate($cacheTime, $cacheAdditionalId, $cachePath, $realLastUpdate);
+			}
 		}
 	}
 

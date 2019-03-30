@@ -28,6 +28,30 @@ class IblockExportXmlBuilder extends BaseMapperBuilder
         return $row ? $row['ID'] : null;
     }
 
+	public function getUserOptionsCode(array $iblock)
+	{
+		$value = \CUserOptions::getOption('form', 'form_element_'.$iblock['ID'], false, 0);
+		if (!$value) {
+			return "";
+		}
+
+		$valueStr = serialize($value);
+		return trim("
+<?php
+
+\$iblock = \CIBlock::getList([], [
+	'TYPE' => '{$iblock['IBLOCK_TYPE_ID']}',
+	'CODE' => '{$iblock['CODE']}',
+])->fetch();
+if (\$iblock) {
+	\$value = unserialize('{$valueStr}');
+	\CUserOptions::setOption('form', 'form_element_'.\$iblock['ID'], \$value, true);
+}
+
+?>
+		");
+	}
+
     public function getCreateCode()
     {
         $row = \CIBlock::getList([], [
@@ -35,6 +59,8 @@ class IblockExportXmlBuilder extends BaseMapperBuilder
             'CHECK_PERMISSIONS' => 'N',
         ])->fetch();
         $iblockTypeId = $row['IBLOCK_TYPE_ID'];
+
+		$userOptionsCode = $this->getUserOptionsCode($row);
 
         return trim("
 <?php
@@ -100,6 +126,7 @@ fclose(\$file);
 unset(\$obXMLFile, \$obCatalog);
 
 ?>
+{$userOptionsCode}
         ");
     }
 

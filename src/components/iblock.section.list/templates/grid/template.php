@@ -13,11 +13,11 @@ $filterRequest = $arResult['FILTER_REQUEST'];
 $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 
 ?>
-<div class="iblockSectionList iblockSectionList_grid">
+<div id="<?= $arResult['HTML_ID'] ?>" class="bitrixModuleCssIblockSectionListGrid">
 	<div class="row">
 		<?php if ($isViewFilter): ?>
 			<div class="col-12 col-lg-4 col-xl-3">
-				<div class="iblockSectionList__filter">
+				<div class="bitrixModuleCssIblockSectionListGrid__filter">
 					<?php
 					$filterParams = [
 						'CACHE_TYPE' => 'N',
@@ -35,9 +35,9 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 		<?php else: ?>
 			<div class="col-12">
 		<?php endif; ?>
-				<div class="iblockSectionList__content">
+				<div class="bitrixModuleCssIblockSectionListGrid__content">
 					<?php if ($sorterRequest && !$sorterRequest->isOnlyData): ?>
-						<div class="iblockSectionList__sorter">
+						<div class="bitrixModuleCssIblockSectionListGrid__sorter">
 							<?php
 							$sorterParams = [
 								'CACHE_TYPE' => 'N',
@@ -49,7 +49,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 						</div>
 					<?php endif; ?>
 
-					<div class="iblockSectionList__items">
+					<div class="bitrixModuleCssIblockSectionListGrid__items">
 						<div class="row">
 							<?php
 							$items = $dataSet->getItems();
@@ -60,29 +60,31 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 							}
 
 							$cols = (int) ($arParams['COLS'] ?? 3);
+							$colXs = (int) ($arParams['COL_XS'] ?? 12);
+
 							if ($cols == 4) {
-								$colSm = 6;
-								$colMd = 4;
-								$colLg = 3;
-								$colXl = 3;
+								$colSm = (int) ($arParams['COL_SM'] ?? 6);
+								$colMd = (int) ($arParams['COL_MD'] ?? 4);
+								$colLg = (int) ($arParams['COL_LG'] ?? 3);
+								$colXl = (int) ($arParams['COL_XL'] ?? 3);
 							}
 							else if ($cols == 3) {
-								$colSm = 6;
-								$colMd = 4;
-								$colLg = 4;
-								$colXl = 4;
+								$colSm = (int) ($arParams['COL_SM'] ?? 6);
+								$colMd = (int) ($arParams['COL_MD'] ?? 4);
+								$colLg = (int) ($arParams['COL_LG'] ?? 4);
+								$colXl = (int) ($arParams['COL_XL'] ?? 4);
 							}
 							else if ($cols == 2) {
-								$colSm = 6;
-								$colMd = 6;
-								$colLg = 6;
-								$colXl = 6;
+								$colSm = (int) ($arParams['COL_SM'] ?? 6);
+								$colMd = (int) ($arParams['COL_MD'] ?? 6);
+								$colLg = (int) ($arParams['COL_LG'] ?? 6);
+								$colXl = (int) ($arParams['COL_XL'] ?? 6);
 							}
 							else {
-								$colSm = 12;
-								$colMd = 12;
-								$colLg = 12;
-								$colXl = 12;
+								$colSm = (int) ($arParams['COL_SM'] ?? 12);
+								$colMd = (int) ($arParams['COL_MD'] ?? 12);
+								$colLg = (int) ($arParams['COL_LG'] ?? 12);
+								$colXl = (int) ($arParams['COL_XL'] ?? 12);
 							}
 
 							foreach ($items as $item) {
@@ -93,7 +95,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 									],
 									$itemDefaultParams
 								);
-								echo "<div class='col-12 col-sm-{$colSm} col-md-{$colMd} col-lg-{$colLg} col-xl-{$colXl}'>";
+								echo "<div class='col-{$colXs} col-sm-{$colSm} col-md-{$colMd} col-lg-{$colLg} col-xl-{$colXl}'>";
 								$APPLICATION->IncludeComponent('bitrix.module:iblock.section.view', $itemTemplate, $itemParams, $component);
 								echo "</div>";
 							}
@@ -102,7 +104,7 @@ $isViewFilter = $filterRequest && !$filterRequest->isOnlyData;
 					</div>
 
 					<?php if ($pagerRequest && !$pagerRequest->isOnlyData): ?>
-						<div class="iblockSectionList__pager">
+						<div class="bitrixModuleCssIblockSectionListGrid__pager">
 							<?php
 							$pagerParams = [
 								'CACHE_TYPE' => 'N',

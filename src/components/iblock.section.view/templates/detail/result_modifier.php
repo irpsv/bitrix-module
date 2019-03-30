@@ -9,16 +9,28 @@ if (!$row) {
 // SECTION_TREE
 //
 $sectionTree = [];
-$result = \CIBlockSection::getList([
-    'DEPTH_LEVEL' => 'ASC',
-], [
-	'IBLOCK_ID' => $row['IBLOCK_ID'],
-    'HAS_ELEMENT' => $row['ID'],
-    'CHECK_PERMISSIONS' => 'N',
-]);
-while ($section = $result->fetch()) {
-    $section['SECTION_PAGE_URL'] = \CIBlock::replaceSectionUrl($section['SECTION_PAGE_URL'], $section, false, 'S');
-    $sectionTree[] = $section;
+$nowSection = $row;
+$limit = 10;
+while ($limit-- && $nowSection) {
+	$nowSection['SECTION_PAGE_URL'] = \CIBlock::replaceSectionUrl(
+		$nowSection['SECTION_PAGE_URL'],
+		$nowSection,
+		false,
+		'S'
+	);
+	array_unshift($sectionTree, $nowSection);
+
+	$nowSectionId = $nowSection['IBLOCK_SECTION_ID'];
+	if ($nowSectionId) {
+		$nowSection = \CIBlockSection::getList([], [
+			'ID' => $nowSectionId,
+			'IBLOCK_ID' => $nowSection['IBLOCK_ID'],
+			'CHECK_PERMISSIONS' => 'N',
+		])->fetch();
+	}
+	else {
+		$nowSection = false;
+	}
 }
 $arResult['SECTION_TREE'] = $sectionTree;
 
@@ -47,9 +59,6 @@ $arResult['CANONICAL'] = \CIBlock::replaceDetailUrl(
     true,
     'S'
 );
-$arResult['OPEN_GRAPH_TITLE'] = $arResult['SEO_VALUES']['SECTION_META_TITLE'] ?? $row['NAME'];
-$arResult['OPEN_GRAPH_DESCRIPTION'] = $arResult['SEO_VALUES']['SECTION_META_DESCRIPTION'] ?? null;
-$arResult['OPEN_GRAPH_IMAGE'] = null;
 
 //
 // URLs
@@ -63,53 +72,47 @@ if ($row['SECTION_PAGE_URL']) {
 	);
 }
 
-if ($row['LIST_PAGE_URL']) {
-	$row['LIST_PAGE_URL'] = \CIBlock::replaceDetailUrl(
-	    $row['LIST_PAGE_URL'],
-	    $row,
-	    true,
-	    'S'
-	);
-}
-
 //
 // PICTURES
 //
-if ($row['PICTURE']) {
-	$sizes = $arParams['PICTURE_SIZES'] ?? [];
-	if ($sizes) {
-		$row['PICTURE'] = \CFile::ResizeImageGet($row['PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);
-		$row['PICTURE']['SRC'] = $row['PICTURE']['src'];
-	}
-	else {
-		$row['PICTURE'] = \CFile::getFileArray($row['PICTURE']);
-	}
-	if ($row['PICTURE'] && $arResult['SEO_VALUES']['SECTION_PICTURE_FILE_ALT']) {
-		$row['PICTURE']['ALT'] = $arResult['SEO_VALUES']['SECTION_PICTURE_FILE_ALT'];
-	}
-}
-
 if ($row['DETAIL_PICTURE']) {
 	$sizes = $arParams['DETAIL_PICTURE_SIZES'] ?? [];
+
+    $row['DETAIL_PICTURE'] = \CFile::getFileArray($row['DETAIL_PICTURE']);
 	if ($sizes) {
+        $originalWidth = $row['DETAIL_PICTURE']['WIDTH'];
+        $originalHeight = $row['DETAIL_PICTURE']['HEIGHT'];
+
+        $isWidthGreater = $sizes['width'] > $originalWidth;
+        $isHeightGreater = $sizes['height'] > $originalHeight;
+
+        $k = 1;
+        if ($isWidthGreater && $isHeightGreater) {
+            if ($originalHeight > $originalWidth) {
+                $k = $originalWidth / $sizes['width'];
+            }
+            else {
+                $k = $originalHeight / $sizes['height'];
+            }
+        }
+        else if ($isWidthGreater) {
+            $k = $originalWidth / $sizes['width'];
+        }
+        else if ($isHeightGreater) {
+            $k = $originalHeight / $sizes['height'];
+        }
+        $sizes['width'] *= $k;
+        $sizes['height'] *= $k;
+
 		$row['DETAIL_PICTURE'] = \CFile::ResizeImageGet($row['DETAIL_PICTURE'], $sizes, \BX_RESIZE_IMAGE_EXACT);
 		$row['DETAIL_PICTURE']['SRC'] = $row['DETAIL_PICTURE']['src'];
-	}
-	else {
-		$row['DETAIL_PICTURE'] = \CFile::getFileArray($row['DETAIL_PICTURE']);
 	}
 	if ($row['DETAIL_PICTURE'] && $arResult['SEO_VALUES']['SECTION_DETAIL_PICTURE_FILE_ALT']) {
 		$row['DETAIL_PICTURE']['ALT'] = $arResult['SEO_VALUES']['SECTION_DETAIL_PICTURE_FILE_ALT'];
 	}
-}
-
-$imageId = $row['DETAIL_PICTURE'] ?: $row['PICTURE'];
-if ($imageId) {
-    $src = \CFile::GetPath($imageId);
-    if ($src) {
-        $scheme = $_SERVER['REQUEST_SCHEME'] ?: 'http';
-        $arResult['OPEN_GRAPH_IMAGE'] = "{$scheme}://". \SITE_SERVER_NAME .$src;
-    }
+	if ($row['DETAIL_PICTURE'] && $arResult['SEO_VALUES']['SECTION_DETAIL_PICTURE_FILE_ALT']) {
+		$row['DETAIL_PICTURE']['TITLE'] = $arResult['SEO_VALUES']['SECTION_DETAIL_PICTURE_FILE_TITLE'];
+	}
 }
 
 $arResult['ROW'] = $row;

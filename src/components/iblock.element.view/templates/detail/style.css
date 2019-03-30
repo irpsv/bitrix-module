@@ -1,12 +1,15 @@
-.bitrix_moduleIblockElementViewDetail {
+.bitrixModuleCssIblockElementViewDetail {
 
 }
-.bitrix_moduleIblockElementViewDetail__title {
+.bitrixModuleCssIblockElementViewDetail__title {
     margin-bottom: 2rem;
 }
-.bitrix_moduleIblockElementViewDetail__banner {
+.bitrixModuleCssIblockElementViewDetail__banner {
     margin-bottom: 2rem;
 }
-.bitrix_moduleIblockElementViewDetail__content {
+.bitrixModuleCssIblockElementViewDetail__content {
     margin-bottom: 2rem;
+}
+.bitrixModuleCssIblockElementViewDetail__content * {
+	max-width: 100%;
 }
