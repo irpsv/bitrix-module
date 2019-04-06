@@ -11,8 +11,8 @@ class bitrix_module extends CModule
 
     public function __construct()
     {
-        $this->PARTNER_NAME = "ArtEast";
-        $this->PARTNER_URI = "https://arteast.ru";
+        $this->PARTNER_NAME = "";
+        $this->PARTNER_URI = "https://";
     }
 
     public function DoInstall()

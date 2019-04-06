@@ -2,28 +2,23 @@
 
 namespace bitrix_module\model;
 
-use bitrix_module\iblock\ElementActiveRecord;
-
-class ExampleModel extends ElementActiveRecord
+/**
+ * Модель для насыщения сложной бизнес-логикой
+ * Использовать в качестве ActiveRecord НЕ рекомендуется - избыточно
+ */
+class ExampleModel
 {
-	public $managerId;
-	public $usersIds;
+	public $id;
+	public $name;
+	public $value;
 
-	public static function getIblockCode()
+	public static function load($id)
 	{
-		return 'managers_to_user';
+		// загрузка и создание
 	}
 
-	public static function getSchema()
+	public function save()
 	{
-		return [
-			'usersIds' => 'PROPERTY_users',
-			'managerId' => 'PROPERTY_manager',
-		];
-	}
-
-	public static function getModelName($model)
-	{
-		return "Привязка пользователей к менеджеру '{$model->managerId}'";
+		// сохранение
 	}
 }

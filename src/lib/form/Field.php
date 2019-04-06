@@ -119,7 +119,7 @@ class Field
 		if ($row['NAME']) {
 			$this->name = $row['NAME'];
 		}
-		if ($row['NAME']) {
+		if ($row['HINT']) {
 			$this->hint = $row['HINT'];
 		}
 		if ($row['TYPE']) {
