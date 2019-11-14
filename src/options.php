@@ -83,7 +83,8 @@ foreach ($options as $optionTab) {
     }
 }
 
-if ($_POST['save'] ?? $_POST['apply'] ?? false) {
+$isSave = $_POST['save'] ?? $_POST['apply'] ?? false;
+if ($isSave && check_bitrix_sessid()) {
 	foreach ($optionNames as $name) {
 		$value = $_POST[$name] ?? null;
 		if (is_array($value)) {
